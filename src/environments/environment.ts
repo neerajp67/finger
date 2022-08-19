@@ -2,8 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+
 export const environment = {
-  production: false
+  production: false,
+  baseUrl: 'http://phplaravel-596529-2814684.cloudwaysapps.com' ,
+  PUSHER_APP_KEY: 'app-key',
+  wsHost: 'socket.thinkindragon.com'
 };
 
 /*
