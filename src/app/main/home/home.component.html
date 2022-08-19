@@ -1,1 +1,220 @@
-<p>home works!</p>
+<div class="container">
+    <div class="headerOption">
+        <div class="row">
+            <div class="col-4">
+                <div class="coin-container" (click)="coinContainer()">
+                    <img src="../../../assets/icons/coinIcon.png" alt="coins">
+                    <p>{{walletAmount}}</p>
+                </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="life-container" (click)="lifeContainer()">
+                    <img src="../../../assets/icons/heartIcon.png" alt="lifes">
+                    <p>{{life}}</p>
+                </div>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-2">
+                <div class="setting-container" (click)="logout()">
+                    <img src="../../../assets/icons/settingIcon.png" alt="settings">
+                    <!-- <p>{{'3'}}</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="heading-main">Today Event</h1>
+    <h2 class="heading-sub">
+        <img src="../../../assets/icons/coinIcon.png" alt="coin">
+        10 to join event
+    </h2>
+    <div class="d-flex flex-row flex-nowrap overflow-auto" style="width: 100%;">
+        <div *ngFor="let event of myEvents; let i = index">
+        <div class="hilight-event" >
+            <div class="game-title">
+                <p>{{event.title}}</p>
+            </div>
+            <div class="game-price">
+                <p>Price Money <span>${{event.prize}}</span></p>
+            </div>
+            <div class="event-entry">
+                <div class="join-btn" (click)="joinMainEvent(event.id)">
+                    <p>Join Event</p>
+                </div>
+                <div class="join-timer-main">
+                    <div class="time-container">
+                        <div class="timer">
+                            <p class="time">{{eventStartTime[i].h1}}</p>
+                        </div>
+                        <div class="timer" >
+                            <p class="time">{{eventStartTime[i].h2}}</p>
+                        </div>
+                        <p class="time-separator">:</p>
+                        <div class="timer">
+                            <p class="time">{{eventStartTime[i].m1}}</p>
+                        </div>
+                        <div class="timer">
+                            <p class="time">{{eventStartTime[i].m2}}</p>
+                        </div>
+                        <p class="time-separator">:</p>
+                        <div class="timer">
+                            <p class="time">{{eventStartTime[i].s1}}</p>
+                        </div>
+                        <div class="timer">
+                            <p class="time">{{eventStartTime[i].s2}}</p>
+                        </div>
+                    </div>
+                    <div class="timer-text-container-main">
+                        <p>HOURS</p>
+                        <p>MINUTES</p>
+                        <p>SECOND</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="upcoming-event-container">
+        <div class="upcoming-event-heading">
+            <p style="float: left;">Upcoming Events</p>
+            <p style="float: right; margin-right: 10px;">></p>
+        </div>
+        <br>
+        <div class="d-flex flex-row flex-nowrap overflow-auto" style="width: 100%;">
+            <div class="upcoming-event-card" *ngFor="let event of upcomingEventArray;
+             odd as isOdd; even as isEven;">
+                <div [ngClass]="{'card-main': isEven, 'card-main2' : isOdd}">
+                    <div class="card-game-title">
+                        <p>{{event.title}}</p>
+                    </div>
+                    <div class="card-game-price">
+                        <p>Price Money</p>
+                        <p>${{event.prize}}</p>
+                    </div>
+                    <div class="card-event-time">
+                        <div class="card-date">
+                            <p>{{event.start_at | date: 'dd/MM/yyyy'}}</p>
+                        </div>
+                        <div class="card-time">
+                            <p>{{event.start_at | date: 'hh:mm a'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <h2 class="heading-sub">
+                        <img src="../../../assets/icons/coinIcon.png" alt="coin">
+                        10 to join event
+                    </h2>
+                    <div class="join-btn-uncoming" (click)="joinUpcomingEvent(event.id)">
+                        <p>Join Event</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-container" *ngIf="lifePopup">
+    <div class="event-reminder-popup">
+        <div class="popup-header">
+            <img src="../../../assets/icons/clockIcon.png" alt="clock">
+        </div>
+        <div class="popup-main-content">
+            <h2 class="popup-heading">Your Event starts in 5 minuts</h2>
+            <div class="popup-timer">
+                <div class="popup-time-container">
+                    <div class="popup-time">
+                        <p class="time">0</p>
+                    </div>
+
+                    <div class="popup-time">
+                        <p class="time">4</p>
+                    </div>
+                    <p class="time-separator">:</p>
+                    <div class="popup-time">
+                        <p class="time">5</p>
+                    </div>
+                    <div class="popup-time">
+                        <p class="time">6</p>
+                    </div>
+                </div>
+                <div class="timer-text-container">
+                    <p>Minutes</p>
+                    <p>Second</p>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="join-btn" style="margin-top: 10px;">
+                        <p>Join Event</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="popup-container"*ngIf="lifePopup">
+    <div class="event-reminder-popup">
+        <div class="popup-header">
+            <img src="../../../assets/icons/lifeIcon.png" alt="clock">
+        </div>
+        <div class="popup-life-content">
+            <h2 class="popup-heading">Add Your Lives</h2>
+            <div class="popup-timer">
+                <div class="popup-time-container">
+                    <div class="popup-time">
+                        <p class="time">-</p>
+                    </div>
+
+                    <div class="popup-time">
+                        <p class="time">0</p>
+                    </div>
+                    <!-- <p class="time-separator">:</p> -->
+                    <div class="popup-time">
+                        <p class="time">2</p>
+                    </div>
+                    <div class="popup-time">
+                        <p class="time">+</p>
+                    </div>
+                </div>
+                <div class="timer-text-container">
+                    <p>Lives</p>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="lifeAmount">
+                        <p>$100</p>
+                    </div>
+                    <div class="join-btn" style="background: linear-gradient(180deg, #9EADF7 0%, #716AE7 100%);">
+                        <p style="color: #FFFFFF;">Add Live</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="bottomNav">
+    <div class="row">
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../assets/icons/homeActivatedIcon.png" alt="Home" (click)="navigate('main')">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../assets/icons/walletIcon.png" alt="Wallet" (click)="navigate('wallet')">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../../assets/icons/userIcon.png" alt="Profile" (click)="navigate('profile')">
+            </div>
+        </div>
+    </div>
+</div>

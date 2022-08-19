@@ -1,0 +1,116 @@
+.heading {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.socialLoginBtn-container {
+    margin: 6px;
+    width: auto;
+}
+
+.facebookLogin {
+    margin-bottom: 16px;
+    height: 50px;
+    text-align: center;
+    border-radius: 50px;
+    background-image: linear-gradient(#1CD3EB, #0752A5);
+    cursor: pointer;
+}
+.socialIcon {
+    position: relative;
+    top: 15%;
+    left: 5%;
+    float: left;
+    display: inline;
+    background-repeat: no-repeat;
+    width: 10px;
+    height: 20px;
+    margin-left: 10px;
+
+}
+.socialText {
+    position: relative;
+    top: 25%;
+    display: inline;
+    color: #F6F1FB;
+    font-size: 14px;
+}
+.googleLogin{
+    margin-bottom: 8px;
+    height: 50px;
+    text-align: center;
+    border-radius: 50px;
+    border: 1px solid #EBEAEC;
+    /* background-image: linear-gradient(#1CD3EB, #0752A5); */
+    cursor: pointer;
+}
+.text-container{
+    text-align: center;
+    margin-top: 20px;
+}
+.text-container > .text{
+    color: #A1A4B2;
+    font-size: 14px;
+}
+.form-container > .form-group{
+    margin-bottom: 10px;
+   
+}
+.form-container > .form-group > input{
+    background-color: #F2F3F7;
+    border-radius: 15px;
+    height: 50px;
+}
+.loginBtn-container{
+    margin-top: 20px;
+    margin-left: 6px;
+    margin-right: 6px;
+    width: 100%;
+}
+.loginBtn{
+    margin-bottom: 16px;
+    height: 50px;
+    text-align: center;
+    border-radius: 50px;
+    background-image: linear-gradient(#9EADF7, #716AE7);
+    cursor: pointer;
+    position: relative;
+    color: #F6F1FB;
+    font-size: 14px;
+}
+/* .loginBtn > p{
+    position: relative;
+    top: 25%;
+    color: #F6F1FB;
+    font-size: 14px;
+} */
+.privacyPolicy{
+    margin-left: 6px;
+    margin-bottom: 60px;
+}
+.privacyPolicy > p{
+    color: #FFFFFF;
+    font-size: 14px;
+    float: left;
+}
+.privacyPolicy > p > span{
+    color: #8E97FD;
+}
+.privacyPolicy > input{
+    /* right: 0;
+    left: 50%; */
+    float: right;
+    margin-right: 6px;
+}
+.backIcon{
+    margin-top: 30px;
+    width: 55px;
+}
+.backIcon > img{
+    /* margin-top: 30px; */
+    height: 55px;
+    width: 55px;
+}

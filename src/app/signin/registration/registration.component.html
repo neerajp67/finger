@@ -1,1 +1,102 @@
-<p>registration works!</p>
+<div class="container">
+    <div class="backIcon" (click)="navigateToLogin()">
+        <img src="../../../assets/icons/backIcon.png" alt="back con">
+    </div>
+    <div class="heading">
+        <h1>Create Your Account</h1>
+    </div>
+    <div class="socialLoginBtn-container">
+        <div class="facebookLogin" (click)="signInWithFacebook()">
+            <div class="socialIcon" style="margin-left: 15px">
+                <img src="../../../assets/icons/fbIcon.png" alt="fb icon">
+            </div>
+            <div class="socialText">
+                CONTINUE WITH FACEBOOK
+            </div>
+        </div>
+        <div class="googleLogin" (click)="signInWithGoogle()">
+            <div class="socialIcon">
+                <img src="../../../assets/icons/googleIcon.png" alt="google icon">
+            </div>
+            <div class="socialText" style="margin-left: -12px; color: #3F414E;">
+                CONTINUE WITH GOOGLE
+                <!-- <asl-google-signin-button style="opacity: 0;">
+                </asl-google-signin-button> -->
+            </div>
+        </div>
+    </div>
+    <div class="text-container">
+        <p class="text">OR LOG IN WITH EMAIL</p>
+    </div>
+    <!-- <div class="form-container">
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+    </div> -->
+    <!-- <form class="form-container" [formGroup]="registrationForm" (ngSubmit)="registerUser(registrationForm)"
+        *ngIf="isLoggedin">
+        <div class="form-group">
+            <input type="text" class="form-control" formControlName="name" placeholder="Name"
+                [ngModel]="socialUser.name">
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" formControlName="email" placeholder="Email Address"
+                [ngModel]="socialUser.email" readonly>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="password" placeholder="Password"
+                [ngModel]="socialUser.id">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="password_confirm"
+                placeholder="Confirm Password" [ngModel]="socialUser.id">
+        </div>
+        <div class="privacyPolicy">
+            <p>I have read the <span (click)="openPrivacyPolicy()">Privacy Policy</span></p>
+            <input type="checkbox" [checked]="termComditionChecked" (change)="privacyPolicyCheck();
+            termComditionChecked = !termComditionChecked" />
+        </div>
+        <button class="loginBtn loginBtn-container" type="submit">GET STARTED</button>
+    </form> -->
+    <form class="form-container" [formGroup]="registrationForm" (ngSubmit)="registerUser(registrationForm)"
+        *ngIf="!isLoggedin">
+        <div class="form-group">
+            <input type="text" class="form-control" formControlName="name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" formControlName="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="password_confirm"
+                placeholder="Confirm Password">
+        </div>
+        <div class="privacyPolicy">
+            <p>I have read the <span (click)="openPrivacyPolicy()">Privacy Policy</span></p>
+            <input type="checkbox" [checked]="termComditionChecked" (change)="privacyPolicyCheck();
+            termComditionChecked = !termComditionChecked" />
+        </div>
+        <button class="loginBtn loginBtn-container" type="submit">GET STARTED</button>
+    </form>
+    <!-- <div class="privacyPolicy">
+        <p>I have read the <span (click)="openPrivacyPolicy()">Privacy Policy</span></p>
+        <input type="checkbox" [checked]="termComditionChecked" 
+        (change)="privacyPolicyCheck();
+        termComditionChecked = !termComditionChecked" />
+    </div>
+    <div class="loginBtn-container" (click)="registerUser(registrationForm)">
+        <div class="loginBtn">
+            <p>GET STARTED</p>
+        </div>
+    </div> -->
+
+
+</div>

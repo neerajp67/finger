@@ -1,1 +1,84 @@
-<p>login works!</p>
+<div class="container">
+    <div class="heading">
+      <h1>Welcome Back</h1>
+    </div>
+    <div class="socialLoginBtn-container">
+      <div class="facebookLogin" (click)="signInWithFacebook()">
+        <div class="socialIcon" style="margin-left: 15px">
+          <img src="../../../assets/icons/fbIcon.png">
+        </div>
+        <div class="socialText">
+          CONTINUE WITH FACEBOOK
+        </div>
+      </div>
+      <!-- <asl-google-signin-button> -->
+      <div class="googleLogin" (click)="signInWithGoogle()">
+        <div class="socialIcon">
+          <img src="../../../assets/icons/googleIcon.png">
+        </div>
+        <div class="socialText" style="margin-left: -12px; color: #3F414E;">
+          CONTINUE WITH GOOGLE
+          <!-- <asl-google-signin-button style="opacity: 0;">
+          </asl-google-signin-button> -->
+        </div>
+      </div>
+      <!-- </asl-google-signin-button> -->
+    </div>
+    <div class="text-container">
+      <p class="text">OR LOG IN WITH EMAIL</p>
+    </div>
+    <!-- <div class="form-container">
+      <div class="form-group">
+        <input type="text" class="form-control" id="email" placeholder="Email Address" >
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+    </div> -->
+    <form class="form-container" [formGroup]="loginForm" (ngSubmit)="login(loginForm)">
+      <div class="form-group">
+          <input type="email" class="form-control" formControlName="email" placeholder="Email Address">
+      </div>
+      <div class="form-group">
+          <input type="password" class="form-control" formControlName="password" placeholder="Password">
+      </div>
+      <button class="loginBtn loginBtn-container" type="submit">LOG IN</button>
+    </form>
+  
+    <!-- <div class="loginBtn-container">
+      <div class="loginBtn">
+        <p>LOG IN</p>
+      </div>
+    </div> -->
+    <div class="forgetPassword" (click)="forgetPassword()">
+      <p>Forget Password?</p>
+    </div>
+  
+    <div class="signupLink">
+      <p>ALREADY HAVE AN ACCOUNT? <span (click)="navigateToRegister()">SIGN UP</span></p>
+    </div>
+  </div>
+  
+  <!-- <div class="container" style="max-width: 550px">
+      <h2 class="text-center mb-5">Angular Login with Google</h2>
+      <div *ngIf="isLoggedin === false">
+        <div>
+          <button type="button" (click)="loginWithGoogle()" class="btn btn-danger">Login with Google</button>
+        </div>
+      </div>
+      <div *ngIf="isLoggedin === true">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" class="form-control" [value]="socialUser.firstName" id="firstname" readonly>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" class="form-control" [value]="socialUser.lastName" id="lastname" readonly>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" class="form-control" [value]="socialUser.email" id="email" readonly>
+        </div>
+        <button type="button" (click)="logOut()" class="btn btn-primary">Log Out</button>
+      </div>
+    </div> -->

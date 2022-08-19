@@ -1,1 +1,149 @@
-<p>game works!</p>
+<div class="container">
+    <div class="headerOption">
+        <div class="row">
+            <div class="col-5">
+                <div class="user-count-container">
+                    <img src="../../../assets/icons/participantIcon.png" alt="coins">
+                    <p>{{participants}}</p>
+                </div>
+            </div>
+            <!-- <div class="col-1"></div> -->
+            <div class="col-3">
+                <div class="life-container">
+                    <img src="../../../assets/icons/heartIcon.png" alt="lifes">
+                    <p>{{lifes}}</p>
+                </div>
+            </div>
+            <!-- <div class="col-1"></div> -->
+            <div class="col-4">
+                <div class="balance-container">
+                    <!-- <img src="../../../assets/icons/settingIcon.png" alt="settings"> -->
+                    <p>${{walletAmount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="timmer-before" style="display: none;">
+        <p>1 min to place finger</p>
+        <div class="time-container">
+            <div class="timer">
+                <p class="time">0</p>
+            </div>
+
+            <div class="timer">
+                <p class="time">4</p>
+            </div>
+            <p class="time-separator">:</p>
+            <div class="timer">
+                <p class="time">5</p>
+            </div>
+            <div class="timer">
+                <p class="time">6</p>
+            </div>
+        </div>
+        <div class="timer-text-container">
+            <p>Minutes</p>
+            <p>Second</p>
+        </div>
+    </div>
+
+    <div class="timmer-after">
+        <p>Time Elapsed</p>
+        <div class="time-after-container">
+            <div class="timer-after">
+                <p class="time-after">0</p>
+            </div>
+            <div class="timer-after">
+                <p class="time-after">4</p>
+            </div>
+            <p class="time-after-separator">:</p>
+            <div class="timer-after">
+                <p class="time-after">5</p>
+            </div>
+            <div class="timer-after">
+                <p class="time-after">6</p>
+            </div>
+            <p class="time-after-separator">:</p>
+            <div class="timer-after">
+                <p class="time-after">5</p>
+            </div>
+            <div class="timer-after">
+                <p class="time-after">6</p>
+            </div>
+        </div>
+        <div class="timer-text-after-container">
+            <p>Hours</p>
+            <p>Minutes</p>
+            <p>Second</p>
+        </div>
+    </div>
+    <div class="addvertise">
+        <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise">
+    </div>
+
+    <div class="game-pad-container">
+        <div class="game-pad" #gamePad id="gamePad"></div>
+    </div>
+</div>
+
+<div class="popup-container" style="display: none;">
+    <div class="use-life-popup">
+        <div class="popup-header">
+            <img src="../../../assets/icons/lifeIcon.png" alt="clock">
+        </div>
+        <div class="popup-main-content">
+            <h2 class="popup-heading">Use your extra lives</h2>
+            <div class="popup-timer">
+                <div class="popup-time-container">
+                    <div class="popup-time">
+                        <p class="time">0</p>
+                    </div>
+
+                    <div class="popup-time">
+                        <p class="time">4</p>
+                    </div>
+
+                </div>
+                <div class="timer-text-container">
+                    <p>Second</p>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="no-btn">
+                        <p>No</p>
+                    </div>
+                    <div class="yes-btn">
+                        <p>Yes</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="popup-container" style="display: none;" >
+    <div class="game-complete-popup">
+        <div class="popup-header" style="margin-bottom: 40px;">
+            <img src="../../../assets/icons/winImg.png" alt="clock">
+        </div>
+        <div class="popup-complete-content">
+            <h2 class="popup-heading">You won the game</h2>
+            <div class="popup-position-container">
+                <img src="../../../assets/icons/positionImg.png" alt="clock">
+            </div>
+            <div class="popup-timer">
+                <div style="display: flex; justify-content: center;">
+                    <div class="skip-btn">
+                        <p>Skip</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

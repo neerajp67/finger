@@ -1,1 +1,40 @@
-<p>profile works!</p>
+<div class="container">
+    <div class="profile-container">
+      <p>Profile</p>
+      <input type="file" name="importProfile" id="importProfile" #importProfile
+       accept=".jpg,.jpeg,bmp,png" (change)="onChange($event)" style="display: none;">
+      <img type="file" (click)="getProfilePic()" [src]= "profilePicUrl | urlSenitize"
+       alt="profile picture">
+    </div>  
+    <form class="form-container" [formGroup]="profileForm" (ngSubmit)="updateProfile(profileForm)">
+      <div class="form-group">
+          <input type="text" class="form-control" formControlName="name" placeholder="Name" 
+          [ngModel]="userName">
+      </div>
+      <div class="form-group">
+          <input type="email" class="form-control" formControlName="email" placeholder="Email"
+          [ngModel]="userEmail" readonly>
+      </div>
+      <button class="updateBtn updateBtn-container" type="submit">Update</button>
+    </form>
+  </div>
+  
+  <div class="bottomNav">
+    <div class="row">
+      <div class="col-4">
+        <div class="iconContainer">
+          <img src="../../assets/icons/homeIcon.png" alt="Home" (click)="navigate('main')">
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="iconContainer">
+          <img src="../../assets/icons/walletIcon.png" alt="Wallet" (click)="navigate('wallet')">
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="iconContainer">
+          <img src="../../assets/icons/userActivatedIcon.png" alt="Profile" (click)="navigate('profile')">
+        </div>
+      </div>
+    </div>
+  </div>

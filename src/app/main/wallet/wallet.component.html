@@ -1,1 +1,124 @@
-<p>wallet works!</p>
+<div class="container">
+
+    <!-- <angular4-paystack
+    [email]="'admin@admin.com'"
+    [amount]="5000000"
+    [ref]="reference"
+    [channels]="['bank']"
+    [class]="'btn btn-primary'"
+    (onClose)="paymentCancel()"
+    (callback)="paymentDone($event)"
+  >
+    Pay with Paystack
+  </angular4-paystack> -->
+    <p class="heading">Wallet</p>
+    <p class="walletBalance">${{walletBalance}}</p>
+    <p class="walletBalanceText">Wallet Ammount</p>
+    <div class="row" style="margin: 6px; width: auto;">
+        <div class="col-8">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="addAmount" style="margin-bottom: 5px;">Add Amount</label><br>
+                    <input type="number" class="form-control" id="addAmount" placeholder="$100" #addAmountInput>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <!-- <div class="addAmountBtn" id="addAmountBtn" (click)="addAmount()">
+                <p>Add Amount</p>
+            </div> -->
+            <button angular4-paystack class="addAmountBtn"
+            [key]="paystackKey" 
+            [email]="userEmail"
+                [amount]="addAmountValue" [ref]="paystackReference" 
+                (paymentInit)="paymentInit()"
+                (onClose)="paymentCancel()" 
+                (callback)="paymentDone($event)"
+                (click)="addAmount()">
+                Add Amount
+            </button>
+        </div>
+    </div>
+    <p class="addAmountText">lorem ipsum dummy text</p>
+
+    <div class="row" style="margin: 6px; width: auto;">
+        <div class="col-8">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="withdrawdAmount" style="margin-bottom: 5px;">Withdraw Amount</label><br>
+                    <input type="number" class="form-control" id="withdrawdAmount" placeholder="$100"
+                        #withdrawdAmountInput>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="withdrawAmountBtn" (click)="withdrawAmount()">
+                <p>Withdraw</p>
+            </div>
+        </div>
+    </div>
+    <p class="addAmountText">lorem ipsum dummy text</p>
+
+    <div class="transaction-container">
+        <div class="row rowMain">
+            <div class="col-4 colLeft">
+                Transaction Id
+            </div>
+            <div class="col-4">
+                Date
+            </div>
+            <div class="col-4 colRight">
+                Amount
+            </div>
+        </div>
+        <div class="rowSub">
+            <div class="row" *ngFor="let transaction of transactions">
+                <div class="col-4 colLeft">
+                    {{transaction.transaction_id}}
+                </div>
+                <div class="col-4">
+                    {{transaction.created_at | date: 'dd/MM/yyyy'}}
+                </div>
+                <div class="col-4 colRight"
+                    [ngClass]="{'credit': transaction.type == 'C', 'debit' : transaction.type == 'D'}">
+                    ${{transaction.amount}}
+                </div>
+                <hr class="rowSaparater">
+            </div>
+        </div>
+        <!-- <table class="table">
+            <tbody>
+                <tr *ngFor="let transaction of arr">
+                    <td>{{transaction.id}}</td>
+                    <td>{{transaction.date}}</td>
+                    <td>{{transaction.amount}}</td>
+                </tr>
+            </tbody>
+        </table> -->
+
+    </div>
+
+</div>
+<div class="bottomNav">
+    <div class="row">
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../assets/icons/homeIcon.png" alt="Home" (click)="navigate('main')">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../assets/icons/walletActivatedIcon.png" alt="Wallet" (click)="navigate('wallet')">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="iconContainer">
+                <img src="../../../assets/icons/userIcon.png" alt="Profile" (click)="navigate('profile')">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="iFrame" *ngIf="authorizationUrl != ''">
+    <iframe id="iFrame" #iFrame width="100%" height="100%" [src]="authorizationUrl | urlVerify"
+    ></iframe>
+</div> -->

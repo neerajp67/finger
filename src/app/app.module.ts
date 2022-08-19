@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FingerService } from './utils/finger.service';
 import { DatePipe } from '@angular/common';
 import { HeadersInterceptor } from './utils/headers.interceptor';
+import { Angular4PaystackModule } from 'angular4-paystack';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { HeadersInterceptor } from './utils/headers.interceptor';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    Angular4PaystackModule.forRoot('pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'),
   ],
   providers: [
     FingerService,

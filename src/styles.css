@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+    font-family: Poppins !important;
+}
+html{
+    background-color: #080728;
+}
+body{
+    background-color: #080728;
+}
+.container{
+    background-color: #080728;
+}

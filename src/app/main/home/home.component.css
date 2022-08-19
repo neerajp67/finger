@@ -1,0 +1,480 @@
+.container {
+    /* overflow-x: scroll; */
+    margin-bottom: 70px;
+}
+
+.bottomNav {
+    background-color: #080728;
+    position: fixed;
+    margin-bottom: 0;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.iconContainer>img {
+    height: 28px;
+    width: 24px;
+}
+
+.headerOption {
+    margin-top: 30px;
+}
+
+.coin-container {
+    border-radius: 24px;
+    background-image: linear-gradient(#9EADF7, #716AE7);
+    height: 38px;
+    width: auto;
+    padding: 4px;
+}
+
+.coin-container>img {
+    width: 28px;
+    height: 28px;
+    float: left;
+}
+
+.coin-container>p {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    /* float: right; */
+    text-align: center;
+    margin-right: 5px;
+}
+
+.life-container {
+    border-radius: 24px;
+    background-image: linear-gradient(#9EADF7, #716AE7);
+    height: 38px;
+    /* width: 50x; */
+    padding: 4px;
+}
+
+.life-container>img {
+    width: 28px;
+    height: 28px;
+    float: left;
+}
+
+.life-container>p {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    float: right;
+    margin-right: 5px;
+}
+
+.setting-container {
+    border-radius: 50%;
+    background-image: linear-gradient(#9EADF7, #716AE7);
+    height: 38px;
+    justify-content: center;
+    display: flex;
+    /* width: 50x; */
+    padding: 4px;
+}
+
+.setting-container>img {
+    width: 28px;
+    height: 28px;
+}
+
+.setting-container>p {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    float: right;
+    margin-right: 5px;
+}
+
+.heading-main {
+    color: #FFFFFF;
+    font-size: 24px;
+    margin-top: 16px;
+}
+
+.heading-sub {
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+.heading-sub>img {
+    height: 20px;
+    width: 20px;
+}
+
+.hilight-event {
+    height: 200px;
+    width: 340px;
+    background-image: linear-gradient(#9EACF7, #716AE7);
+    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    /* box-shadow: 5px 10px #888888; */
+    box-shadow: 0px 14px 20px rgba(116, 110, 232, 0.36);
+}
+
+.game-title>p {
+    font-size: 32px;
+    color: #000000;
+    font-weight: 600;
+    width: 15ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.game-title {
+    margin-bottom: -16px;
+}
+
+.game-price>p {
+    font-size: 32px;
+    color: #FFFFFF;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+
+.event-entry {
+    margin-top: 20px;
+}
+
+.join-btn {
+    height: 35px;
+    width: 25%;
+    text-align: center;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    padding: 2px;
+    margin-top: 10px;
+    float: left;
+}
+
+.join-btn>p {
+    font-size: 14px;
+    color: #736DE8;
+    padding-top: 3px;
+}
+
+.join-timer {
+    text-align: end;
+    height: 40px;
+    width: 65%;
+    float: right;
+    padding: 2px;
+    margin-top: 30px;
+}
+
+.upcoming-event-container {
+    margin-top: 6px;
+}
+
+.upcoming-event-heading {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.upcoming-event-card {
+    height: 300px;
+    width: 192px;
+    margin-right: 20px;
+    margin-left: 20px;
+    /* background-color: red; */
+    /* margin-top: 16px;
+    padding: 12px; */
+
+}
+
+.card-main {
+    background-image: linear-gradient(#FF9386, #FC4C44);
+    height: 245px;
+    width: 192px;
+    margin-top: 16px;
+    padding: 12px;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+}
+
+.card-main2 {
+    background-image: linear-gradient(#1CD3EB, #0752A5);
+    height: 245px;
+    width: 192px;
+    margin-top: 16px;
+    padding: 12px;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+}
+
+.card-footer {
+    background-color: #6B66F6;
+    height: 84px;
+    width: 192px;
+    padding: 12px;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+    margin-top: -84px;
+    box-shadow: 0px 14px 20px rgba(116, 110, 232, 0.36);
+}
+
+.card-game-title>p {
+    font-size: 16px;
+    color: #000000;
+    font-weight: 600;
+    width: 15ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.card-game-title {
+    margin-bottom: -16px;
+}
+
+.card-game-price>p {
+    font-size: 24px;
+    color: #FFFFFF;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+
+.card-event-time {
+    font-size: 12px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-top: 20px;
+}
+
+.card-date {
+    float: left;
+}
+
+.card-time {
+    float: right;
+}
+
+.overflow-auto::-webkit-scrollbar {
+    display: none;
+}
+
+.join-btn-uncoming {
+    height: 30px;
+    width: 50%;
+    text-align: center;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    padding: 2px;
+    /* margin-top: 30px; */
+    float: right;
+    background-image: linear-gradient(#FFB132, #FB7309);
+}
+
+.join-btn-uncoming>p {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.event-reminder-popup {
+    top: 0;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 200px;
+    height: 330px;
+    width: 100%;
+    padding: 6px;
+    text-align: center;
+}
+
+.popup-header {
+    height: 130px;
+    width: 100%;
+}
+
+.popup-header>image {
+    height: 105px;
+    width: 105px;
+}
+
+.popup-main-content {
+    height: 220px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background-image: linear-gradient(#FFB132, #FB7309);
+}
+
+.popup-life-content {
+    height: 190px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background-image: linear-gradient(#1CD3EB, #0752A5);
+}
+
+.popup-heading {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.popup-timer {
+    /* height: 55px; */
+    /* width: 100%; */
+    margin-bottom: 80px;
+}
+
+.popup-time-container {
+    /* background-color: red; */
+    /* height: 55px;
+    width: 100%; */
+    display: flex;
+    justify-content: center;
+}
+
+.popup-time {
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.1) 100%);
+    border-radius: 5px;
+    padding: 4px, 3px, 4px, 3px;
+    height: 34px;
+    width: 22px;
+    margin-right: 5px;
+    border: 0.5px solid #FFFFFF;
+}
+
+.time {
+    font-size: 24px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.time-separator {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.timer-text-container {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.timer-text-container>p {
+    font-size: 14px;
+    margin-right: 10px;
+    margin-left: 4px;
+    float: left;
+}
+
+.time-container {
+    /* background-color: red; */
+    /* height: 55px;
+    width: 100%; */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.timer {
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.1) 100%);
+    border-radius: 5px;
+    padding: 4px, 3px, 4px, 3px;
+    height: 34px;
+    width: 22px;
+    margin-right: 5px;
+    border: 0.5px solid #FFFFFF;
+    overflow: visible;
+    white-space: normal;
+}
+
+.time {
+    /* font-family: Digital Numbers; */
+    font-size: 24px;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    letter-spacing: 15px;
+    overflow: visible;
+    z-index: 100;
+    /* margin-top: -3px;
+    width: 1ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; */
+
+}
+
+.time-separator {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.timer-text-container-main {
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+    float: right;
+    margin-top: -10px;
+}
+
+.timer-text-container-main>p {
+    font-size: 12px;
+    font-weight: 400;
+    color: #000000;
+    margin-right: 8px;
+    margin-left: 8px;
+    /* margin: 20px; */
+    /* float: left; */
+    /* text-indent: 20px; */
+}
+
+.lifeAmount {
+    height: 30px;
+    width: 25%;
+    border: 1px solid #FFFFFF;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.lifeAmount>p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.popup-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
