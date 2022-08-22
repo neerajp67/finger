@@ -19,7 +19,8 @@
             <div class="form-container">
                 <div class="form-group">
                     <label for="addAmount" style="margin-bottom: 5px;">Add Amount</label><br>
-                    <input type="number" class="form-control" id="addAmount" placeholder="$100" #addAmountInput>
+                    <input type="number" class="form-control" id="addAmount" placeholder="$100" 
+                    [(value)]="addAmountValue" #addAmountInput (change)="valuechange($event)">
                 </div>
             </div>
         </div>
@@ -46,8 +47,8 @@
             <div class="form-container">
                 <div class="form-group">
                     <label for="withdrawdAmount" style="margin-bottom: 5px;">Withdraw Amount</label><br>
-                    <input type="number" class="form-control" id="withdrawdAmount" placeholder="$100"
-                        #withdrawdAmountInput>
+                    <input type="number" class="form-control" placeholder="$100"
+                      (change)="valueWithdrawchange($event)">
                 </div>
             </div>
         </div>
@@ -103,7 +104,7 @@
     <div class="row">
         <div class="col-4">
             <div class="iconContainer">
-                <img src="../../assets/icons/homeIcon.png" alt="Home" (click)="navigate('main')">
+                <img src="../../assets/icons/homeIcon.png" alt="Home" (click)="navigate('home')">
             </div>
         </div>
         <div class="col-4">

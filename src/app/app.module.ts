@@ -16,6 +16,18 @@ import { FingerService } from './utils/finger.service';
 import { DatePipe } from '@angular/common';
 import { HeadersInterceptor } from './utils/headers.interceptor';
 import { Angular4PaystackModule } from 'angular4-paystack';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FirebaseService } from './utils/firebase.service';
+import { LocalNotificationService } from './utils/local-notification.service';
+import { EchoService } from './utils/echo.service';
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+import { SliderComponent } from './signin/slider/slider.component';
+
+export function playerFactory() {
+  return player;
+}
 
 @NgModule({
   declarations: [
@@ -26,7 +38,8 @@ import { Angular4PaystackModule } from 'angular4-paystack';
     HomeComponent,
     ProfileComponent,
     WalletComponent,
-    GameComponent
+    GameComponent,
+    SliderComponent
   ],
   imports: [
     BrowserModule,
@@ -34,15 +47,21 @@ import { Angular4PaystackModule } from 'angular4-paystack';
     HttpClientModule,
     ReactiveFormsModule,
     Angular4PaystackModule.forRoot('pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'),
+    ToastrModule.forRoot(), 
+    BrowserAnimationsModule,
+    LottieModule.forRoot({ player: playerFactory })
   ],
   providers: [
     FingerService,
     DatePipe,
+    FirebaseService,
+    EchoService,
+    LocalNotificationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeadersInterceptor,
       multi: true
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })

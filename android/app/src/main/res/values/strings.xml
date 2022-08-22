@@ -4,4 +4,6 @@
     <string name="title_activity_main">finger-game</string>
     <string name="package_name">com.example.app</string>
     <string name="custom_url_scheme">com.example.app</string>
+  <string name="facebook_app_id">3384914905114267</string>
+  <string name="facebook_client_token">3384914905114267</string>
 </resources>

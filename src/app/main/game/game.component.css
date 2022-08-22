@@ -111,25 +111,25 @@
 .time-container {
     display: flex;
     justify-content: center;
+    margin-top: -8px;
 }
 
 .timer {
     background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.1) 100%);
     border-radius: 5px;
     padding: 4px, 3px, 4px, 3px;
-    height: 46px;
-    width: 30px;
+    height: 32px;
+    width: 28px;
     margin-right: 5px;
-
     border: 0.5px solid #FFFFFF;
 }
 
 .time {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 600;
     color: #FFFFFF;
-    margin-top: -6px;
-    margin-left: 4px;
+    margin-top: -4px;
+    margin-left: 6px;
 }
 
 .time-separator {
@@ -149,15 +149,16 @@
 }
 
 .timer-text-container>p {
+    color: #FFFFFF;
     font-size: 14px;
     margin-right: 18px;
     margin-left: 12px;
-    margin-top: -10px;
+    margin-top: -20px;
     float: left;
 }
 
 .timmer-after {
-    margin-top: 12px;
+    margin-top: 6px;
 }
 
 .timmer-after>p {
@@ -302,7 +303,7 @@
 .time {
     font-size: 24px;
     font-weight: 400;
-    color: #000000;
+    color: #FFFFFF;
     margin-right: 2px;
 }
 
@@ -316,16 +317,17 @@
 .timer-text-container {
     font-size: 14px;
     font-weight: 400;
-    color: #000000;
+    color: #FFFFFF;
     text-align: center;
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 16px;
+    margin-left: 4px;
 }
 
 .timer-text-container>p {
     font-size: 14px;
-    margin-right: 10px;
+    margin-right: 16px;
     margin-left: 4px;
 }
 

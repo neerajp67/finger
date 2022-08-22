@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { PaystackOptions } from 'angular4-paystack';
 import { FingerService } from 'src/app/utils/finger.service';
+import { PrefrenceService } from 'src/app/utils/prefrence.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -12,15 +13,6 @@ import { environment } from 'src/environments/environment';
 })
 export class WalletComponent implements OnInit {
 
-  @ViewChild('addAmountInput')
-  addAmountInput!: ElementRef;
-
-  @ViewChild('withdrawdAmountInput')
-  withdrawdAmountInput!: ElementRef;
-
-  @ViewChild('addAmountBtn')
-  addAmountBtn!: ElementRef;
-
   walletBalance: any;
   transactions: any[] = [];
   userDetails: any;
@@ -29,36 +21,38 @@ export class WalletComponent implements OnInit {
   paystackKey: any = environment.paystackKey;
   userEmail: any;
   addAmountValue: any;
+  withdwarAmountValue: any;
   paystackReference: any;
 
-  // [key]="'pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'" 
-  // [email]="'admin@dmin.com'"
-  //     [amount]="0" [ref]="reference" 
-
-  // options: PaystackOptions = {
-  //   amount: 0,
-  //   email: 'admin@admin.com',
-  //   ref: `${Math.ceil(Math.random() * 10e10)}`,
-  //   // currency: 'INR'
-  // }
-
-
-  constructor(private route: Router, private objService: FingerService, private httpClient: HttpClient) { }
+  constructor(private route: Router, private objService: FingerService,
+    private prefService: PrefrenceService) { }
 
   ngOnInit(): void {
-    this.paystackReference = `ref-${Math.ceil(Math.random() * 10e13)}`;
-    var user = localStorage.getItem('user');
-    console.log('user');
-    if (user != null) {
-      this.userDetails = JSON.parse(user);
-      this.walletBalance = this.userDetails.wallet;
-      this.userEmail = this.userDetails.email;
+    var paystackData = localStorage.getItem('paystack');
+    if (paystackData != null) {
+      this.paystackKey = JSON.parse(paystackData);
+      this.paystackKey = this.paystackKey.paystack_public_key;
     }
+    this.paystackReference = `ref-${Math.ceil(Math.random() * 10e13)}`;
+    // var user = localStorage.getItem('user');
+    // if (user != null) {
+    //   this.userDetails = JSON.parse(user);
+    //   this.walletBalance = this.userDetails.wallet;
+    //   this.userEmail = this.userDetails.email;
+    // }
+    this.prefService.getStorage('user').then(user => {
+      if (user != null || user != '') {
+        console.log('user');
+        this.userDetails = JSON.parse(user);
+        this.walletBalance = this.userDetails.wallet;
+        this.userEmail = this.userDetails.email;
+      }
+    });
     this.getTransactions();
 
   }
   ngAfterViewInit(): void {
-    
+
   }
 
   getTransactions() {
@@ -76,26 +70,18 @@ export class WalletComponent implements OnInit {
   }
 
   addAmount() {
-    this.addAmountValue = this.addAmountInput.nativeElement.value;
-    this.paystackReference = `ref-${Math.ceil(Math.random() * 10e13)}`;
     if (this.addAmountValue == "") {
-      alert("Enter a valid amount");
+      this.objService.showErrorToast("Enter a valid amount", '');
       return
     }
-    // this.objService.paystack({ amount: depositeAmount, email: this.userDetails.email }).subscribe(async (data: any) => {
-    //   console.log(data);
-    //   var accessCode = data.data.access_code;
-    //   this.authorizationUrl = data.data.authorization_url;
-    //   var reference = data.data.reference;
-    // },
-    //   (error: any) => {
-    //     console.log(error);
-    //   })
+    this.paystackReference = `ref-${Math.ceil(Math.random() * 10e13)}`;
   }
 
   withdrawAmount() {
-    var withdrawdAmount = this.withdrawdAmountInput.nativeElement.value;
-    console.log("withdrawAmount clicked")
+    if (this.withdwarAmountValue == "") {
+      this.objService.showErrorToast("Enter a valid amount", '');
+      return
+    }
   }
 
   paymentInit() {
@@ -103,12 +89,46 @@ export class WalletComponent implements OnInit {
   }
 
   paymentDone(ref: any) {
-    this.addAmountValue = "";
-    this.addAmountInput.nativeElement.value = "";
     console.log('Payment successfull', ref);
+    this.objService.showSuccessToast('Payment successfull', '');
+    this.objService.walletCredit({ amount: this.addAmountValue }).subscribe(async (data: any) => {
+      console.log(data);
+      // var accessCode = data.data.access_code;
+      // this.authorizationUrl = data.data.authorization_url;
+      // var reference = data.data.reference;
+      this.addAmountValue = "";
+      this.getTransactions();
+      this.getProfile();
+    },
+      (error: any) => {
+        console.log(error);
+      })
   }
 
   paymentCancel() {
-    console.log('payment failed');
+    console.log('Payment Failed');
+    this.objService.showErrorToast('Payment Failed', '');
   }
+  valuechange(event: any) {
+    // console.log(event.target.value);
+    this.addAmountValue = event.target.value
+  }
+  valueWithdrawchange(event: any) {
+    // console.log(event.target.value);
+    this.withdwarAmountValue = event.target.value
+  }
+
+  getProfile() {
+    console.log();
+    this.objService.getProfile().subscribe((data: any) => {
+      console.log(data);
+      this.walletBalance = data.wallet;
+      this.userEmail = data.email;
+    },
+      (error: any) => {
+        console.log(error);
+      })
+  }
+
+
 }

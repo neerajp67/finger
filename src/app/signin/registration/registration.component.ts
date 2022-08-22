@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FingerService } from 'src/app/utils/finger.service';
+import { PrefrenceService } from 'src/app/utils/prefrence.service';
+// import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 @Component({
   selector: 'app-registration',
@@ -16,7 +18,8 @@ export class RegistrationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private route: Router,
-    private objService: FingerService) { }
+    private objService: FingerService,
+    private prefService: PrefrenceService) { }
 
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
@@ -26,6 +29,10 @@ export class RegistrationComponent implements OnInit {
       password_confirm: ['', Validators.required]
     });
   }
+  // async signInWithFacebook(){
+  //   const result = await FirebaseAuthentication.signInWithFacebook();
+  //   return result.user;
+  // }
 
   signInWithGoogle(): void {
     // this.objService.signInWithGoogle();
@@ -53,19 +60,24 @@ export class RegistrationComponent implements OnInit {
   //     password_confirm: ['', Validators.required]
   registerUser(form: FormGroup) {
     if (form.value.name == "") {
-      alert("please enter name");
+      // alert("please enter name");
+      this.objService.showErrorToast("Please enter name", '');
       return;
     } else if (form.value.email == "") {
-      alert("please enter email");
+      // alert("please enter email");
+      this.objService.showErrorToast("Please enter email", '');
       return;
     } else if (form.value.password == "") {
-      alert("please enter password");
+      // alert("please enter password");
+      this.objService.showErrorToast("Please enter password", '');
       return;
     } else if (form.value.password_confirm == "") {
-      alert("please confirm password");
+      // alert("please confirm password");
+      this.objService.showErrorToast("Please confirm passwor", '');
       return;
     } else if (form.value.password !== form.value.password_confirm) {
-      alert("Password does not match");
+      // alert("Password does not match");
+      this.objService.showErrorToast("Password does not match", '');
       return;
     }
     this.objService.register({
@@ -73,12 +85,15 @@ export class RegistrationComponent implements OnInit {
       password_confirmation: form.value.password_confirm, firebase_id: form.value.password, device_id: '1234', device_type: 'android', device_token: '1234'
     }).subscribe((data: any) => {
       console.log(data);
-      localStorage.setItem('authToken', data.token);
-      this.route.navigate(['main']);
+      // localStorage.setItem('authToken', data.token);
+      this.prefService.setName('authToken', data.token);
+      this.objService.showSuccessToast("Registered Successfully", '');
+      this.route.navigate(['home']);
     },
       (error: any) => {
         console.log('error');
         console.log(error);
+        this.objService.showErrorToast(error.error.message, '');
       })
   }
 }

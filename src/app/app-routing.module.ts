@@ -6,14 +6,16 @@ import { ProfileComponent } from './main/profile/profile.component';
 import { WalletComponent } from './main/wallet/wallet.component';
 import { LoginComponent } from './signin/login/login.component';
 import { RegistrationComponent } from './signin/registration/registration.component';
+import { SliderComponent } from './signin/slider/slider.component';
 
 const routes: Routes = [
   {path : '', component : LoginComponent},
   {path : 'register', component : RegistrationComponent},
-  {path : 'main', component : HomeComponent},
+  {path : 'home', component : HomeComponent},
   {path : 'game', component : GameComponent},
   {path : 'wallet', component : WalletComponent},
   {path : 'profile', component : ProfileComponent},
+  {path : 'slider', component : SliderComponent},
   {path : '**',redirectTo: '', component : LoginComponent},
 ];
 

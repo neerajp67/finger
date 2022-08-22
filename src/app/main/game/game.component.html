@@ -24,22 +24,22 @@
         </div>
     </div>
 
-    <div class="timmer-before" style="display: none;">
-        <p>1 min to place finger</p>
+    <div class="timmer-after" *ngIf="gameAboutToStart">
+        <p>Time remaining to place finger</p>
         <div class="time-container">
             <div class="timer">
-                <p class="time">0</p>
+                <p class="time">{{m1}}</p>
             </div>
 
             <div class="timer">
-                <p class="time">4</p>
+                <p class="time">{{m2}}</p>
             </div>
             <p class="time-separator">:</p>
             <div class="timer">
-                <p class="time">5</p>
+                <p class="time">{{s1}}</p>
             </div>
             <div class="timer">
-                <p class="time">6</p>
+                <p class="time">{{s2}}</p>
             </div>
         </div>
         <div class="timer-text-container">
@@ -47,29 +47,36 @@
             <p>Second</p>
         </div>
     </div>
+    <div class="timmer-after" *ngIf="!gameAboutToStart && !gameStarted">
+        <p>Game is not started yet</p>
+    </div>
+     <div class="timmer-after" *ngIf="gameLost">
+        <p>You were eliminated</p>
+    </div>
+    
 
-    <div class="timmer-after">
+    <div class="timmer-after" *ngIf="gameStarted">
         <p>Time Elapsed</p>
         <div class="time-after-container">
             <div class="timer-after">
-                <p class="time-after">0</p>
+                <p class="time-after">{{Ah1}}</p>
             </div>
             <div class="timer-after">
-                <p class="time-after">4</p>
-            </div>
-            <p class="time-after-separator">:</p>
-            <div class="timer-after">
-                <p class="time-after">5</p>
-            </div>
-            <div class="timer-after">
-                <p class="time-after">6</p>
+                <p class="time-after">{{Ah2}}</p>
             </div>
             <p class="time-after-separator">:</p>
             <div class="timer-after">
-                <p class="time-after">5</p>
+                <p class="time-after">{{Am1}}</p>
             </div>
             <div class="timer-after">
-                <p class="time-after">6</p>
+                <p class="time-after">{{Am2}}</p>
+            </div>
+            <p class="time-after-separator">:</p>
+            <div class="timer-after">
+                <p class="time-after">{{As1}}</p>
+            </div>
+            <div class="timer-after">
+                <p class="time-after">{{As2}}</p>
             </div>
         </div>
         <div class="timer-text-after-container">
@@ -77,17 +84,25 @@
             <p>Minutes</p>
             <p>Second</p>
         </div>
+        
     </div>
     <div class="addvertise">
-        <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise">
-    </div>
+        <iframe width="100%" height="180" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe>
 
-    <div class="game-pad-container">
-        <div class="game-pad" #gamePad id="gamePad"></div>
+        <!-- <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise"> -->
     </div>
+    <div class="game-pad-container">
+        <div class="game-pad" #gamePad id="gamePad">
+            <ng-lottie *ngIf="enableAnimation"
+            [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie>
+            <ng-lottie *ngIf="lifeUsed"
+            [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)"></ng-lottie>
+        </div>
+    </div>
+    <!-- <ng-lottie [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie> -->
 </div>
 
-<div class="popup-container" style="display: none;">
+<div class="popup-container" *ngIf="lifePopup">
     <div class="use-life-popup">
         <div class="popup-header">
             <img src="../../../assets/icons/lifeIcon.png" alt="clock">
@@ -101,7 +116,7 @@
                     </div>
 
                     <div class="popup-time">
-                        <p class="time">4</p>
+                        <p class="time">{{timeLeft}}</p>
                     </div>
 
                 </div>
@@ -109,22 +124,19 @@
                     <p>Second</p>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <div class="no-btn">
+                    <div class="no-btn" (click)="useLife('no')">
                         <p>No</p>
                     </div>
-                    <div class="yes-btn">
+                    <div class="yes-btn" (click)="useLife('yes')">
                         <p>Yes</p>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </div>
 
-<div class="popup-container" style="display: none;" >
+<div class="popup-container" *ngIf="gameWon" >
     <div class="game-complete-popup">
         <div class="popup-header" style="margin-bottom: 40px;">
             <img src="../../../assets/icons/winImg.png" alt="clock">
@@ -136,14 +148,11 @@
             </div>
             <div class="popup-timer">
                 <div style="display: flex; justify-content: center;">
-                    <div class="skip-btn">
-                        <p>Skip</p>
+                    <div class="skip-btn" (click)="navigateToHome()">
+                        <p>Hone</p>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </div>

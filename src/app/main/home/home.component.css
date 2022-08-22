@@ -9,13 +9,13 @@
     margin-bottom: 0;
     bottom: 0;
     width: 100%;
-    height: 60px;
+    height: 50px;
     padding-top: 5px;
     text-align: center;
 }
 
 .iconContainer>img {
-    height: 28px;
+    height: 24px;
     width: 24px;
 }
 
@@ -134,7 +134,7 @@
 }
 
 .game-price>p {
-    font-size: 32px;
+    font-size:26px;
     color: #FFFFFF;
     font-weight: 700;
     text-align: center;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1093527882296",
+    "project_id": "fingergame123",
+    "storage_bucket": "fingergame123.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093527882296:android:813eb6bf4acb9eba62b4cd",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6QL-KJuhT8Q40v6ZkAl8v1NK7uVyZDu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

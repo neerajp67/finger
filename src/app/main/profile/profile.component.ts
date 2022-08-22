@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FingerService } from 'src/app/utils/finger.service';
+import { PrefrenceService } from 'src/app/utils/prefrence.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,16 +10,33 @@ import { FingerService } from 'src/app/utils/finger.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  userDetails: any;
   userName: any = '';
   userEmail: any = '';
   profilePicUrl: any = '../../../assets/icons/defaultProfilePic.png';
   profileForm!: FormGroup;
   profilePic!: File;
-  
-  constructor(private route: Router, private objService: FingerService, private formBuilder: FormBuilder) { }
+
+  constructor(private route: Router, private objService: FingerService,
+    private formBuilder: FormBuilder,
+    private prefService: PrefrenceService) { }
 
   ngOnInit(): void {
-    this.getProfile();
+    // this.getProfile();
+    this.prefService.getStorage('user').then(user => {
+      if (user != null || user != '') {
+        this.userDetails = JSON.parse(user);
+        this.userName = this.userDetails.name;
+        this.userEmail = this.userDetails.email;
+        if (this.userDetails.avatar != null) {
+          this.profilePicUrl = this.objService.baseUrl + '/storage/' + this.userDetails.avatar;
+        } else {
+          this.profilePicUrl = "../../../assets/icons/defaultProfilePic.png";
+        }
+      } else{
+        this.getProfile();
+      }
+    });
     this.profileForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', Validators.required],
@@ -30,9 +48,9 @@ export class ProfileComponent implements OnInit {
       console.log(data);
       this.userName = data.name;
       this.userEmail = data.email;
-      if(data.avatar != null){
+      if (data.avatar != null) {
         this.profilePicUrl = this.objService.baseUrl + '/storage/' + data.avatar;
-      } else{
+      } else {
         this.profilePicUrl = "../../../assets/icons/defaultProfilePic.png";
       }
       // this.route.navigate(['main']);
@@ -60,6 +78,7 @@ export class ProfileComponent implements OnInit {
       this.userName = data.name;
       this.userEmail = data.email;
       this.profilePicUrl = this.objService.baseUrl + '/storage/' + data.avatar;
+      this.objService.showSuccessToast('Profile updated', '');
       // this.route.navigate(['main']);
     },
       (error: any) => {

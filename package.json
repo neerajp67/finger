@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "android": "ng build --configuration production && npx cap sync && npx cap open android"
   },
   "private": true,
   "dependencies": {
@@ -22,9 +23,17 @@
     "@capacitor/app": "^4.0.1",
     "@capacitor/cli": "^4.1.0",
     "@capacitor/core": "^4.1.0",
+    "@capacitor/device": "^4.0.1",
+    "@capacitor/local-notifications": "^4.0.1",
+    "@capacitor/preferences": "^4.0.1",
+    "@capacitor/push-notifications": "^4.0.1",
     "angular4-paystack": "^3.0.2",
     "bootstrap": "^5.2.0",
+    "firebase": "^9.9.3",
     "laravel-echo": "^1.13.1",
+    "lottie-web": "^5.9.6",
+    "ngx-lottie": "^8.2.1",
+    "ngx-toastr": "^15.0.0",
     "pusher-js": "^7.4.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
