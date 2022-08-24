@@ -13,6 +13,10 @@ export class ProfileComponent implements OnInit {
   userDetails: any;
   userName: any = '';
   userEmail: any = '';
+  userPhone: any = '';
+  bankName: any = '';
+  bankNumber: any = ''
+  bankAccNumber: any = ''
   profilePicUrl: any = '../../../assets/icons/defaultProfilePic.png';
   profileForm!: FormGroup;
   profilePic!: File;
@@ -28,6 +32,7 @@ export class ProfileComponent implements OnInit {
         this.userDetails = JSON.parse(user);
         this.userName = this.userDetails.name;
         this.userEmail = this.userDetails.email;
+        this.userPhone = this.userDetails.phone;
         if (this.userDetails.avatar != null) {
           this.profilePicUrl = this.objService.baseUrl + '/storage/' + this.userDetails.avatar;
         } else {
@@ -40,6 +45,10 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', Validators.required],
+      phone: ['', Validators.required],
+      bankName: ['', Validators.required],
+      bankNumber: ['', Validators.required],
+      bankAccNumber: ['', Validators.required],
     });
   }
   getProfile() {
@@ -48,6 +57,7 @@ export class ProfileComponent implements OnInit {
       console.log(data);
       this.userName = data.name;
       this.userEmail = data.email;
+      this.userPhone = data.phone;
       if (data.avatar != null) {
         this.profilePicUrl = this.objService.baseUrl + '/storage/' + data.avatar;
       } else {
@@ -72,11 +82,13 @@ export class ProfileComponent implements OnInit {
     const formData = new FormData();
     formData.append('avatar', this.profilePic);
     formData.append('name', form.value.name);
+    formData.append('mobile', form.value.phone);
     console.log(formData);
     this.objService.updateProfile(formData).subscribe((data: any) => {
       console.log(data);
       this.userName = data.name;
       this.userEmail = data.email;
+      this.userPhone = data.phone;
       this.profilePicUrl = this.objService.baseUrl + '/storage/' + data.avatar;
       this.objService.showSuccessToast('Profile updated', '');
       // this.route.navigate(['main']);

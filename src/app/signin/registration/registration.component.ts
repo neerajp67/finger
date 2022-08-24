@@ -25,6 +25,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', Validators.required],
+      phone: ['', Validators.required],
       password: ['', Validators.required],
       password_confirm: ['', Validators.required]
     });
@@ -67,6 +68,10 @@ export class RegistrationComponent implements OnInit {
       // alert("please enter email");
       this.objService.showErrorToast("Please enter email", '');
       return;
+    } else if (form.value.phone == "" || form.value.phone.length != 10) {
+      // alert("please enter email");
+      this.objService.showErrorToast("Please enter valid phone", '');
+      return;
     } else if (form.value.password == "") {
       // alert("please enter password");
       this.objService.showErrorToast("Please enter password", '');
@@ -81,7 +86,8 @@ export class RegistrationComponent implements OnInit {
       return;
     }
     this.objService.register({
-      name: form.value.name, email: form.value.email, password: form.value.password,
+      name: form.value.name, email: form.value.email, mobile: form.value.phone, 
+      password: form.value.password,
       password_confirmation: form.value.password_confirm, firebase_id: form.value.password, device_id: '1234', device_type: 'android', device_token: '1234'
     }).subscribe((data: any) => {
       console.log(data);
@@ -89,6 +95,7 @@ export class RegistrationComponent implements OnInit {
       this.prefService.setName('authToken', data.token);
       this.objService.showSuccessToast("Registered Successfully", '');
       this.route.navigate(['home']);
+      // this.route.navigate(['slider']);
     },
       (error: any) => {
         console.log('error');

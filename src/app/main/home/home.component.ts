@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { EchoService } from 'src/app/utils/echo.service';
 import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -17,23 +19,39 @@ export class HomeComponent implements OnInit {
   eventStartTime: any[] = [];
   upcomingEventArray: any[] = [];
   walletAmount: any;
+  currency: any;
   life: any;
   lifePopup: boolean = false;
   life1: any = 0;
   life2: any = 1;
   lifeBuyCount: number = 1;
-  lifePrice: any = 100;
+  lifePrice: any = 10;
+  lifeFixedPrice: any;
   interval1: any;
+
+  // messages: any[] = [];
+  subscription!: Subscription;
 
   constructor(private route: Router, private objService: FingerService,
     private datePipe: DatePipe,
     private prefService: PrefrenceService,
-    private echo: EchoService) { 
-
-    }
+    private echo: EchoService,
+    private loader: NgxUiLoaderService) {
+      this.subscription = this.objService.getLifePopupStatus().subscribe((value: any) => {
+        if (Object.values(value)[0]) {
+          this.lifePopup = true;
+        } else {
+          this.lifePopup = false;
+        }
+      });
+  }
 
   ngOnInit(): void {
-    
+    //  this.loader.start('fg-default');
+    // setTimeout(() => {
+
+    // }, 3000);
+
     this.myEvents = this.prefService.myEventdata;
     this.upcomingEventArray = this.prefService.upcomingEventData;
     this.userDetail = this.prefService.profileData;
@@ -85,6 +103,7 @@ export class HomeComponent implements OnInit {
           this.eventCounter(startAtTime, this.myEvents.length);
         }
       }
+      // this.loader.stop();
     },
       (error: any) => {
         console.log(error);
@@ -93,7 +112,7 @@ export class HomeComponent implements OnInit {
   getEvents() {
     this.objService.getEvents().subscribe((data: any) => {
       console.log(data);
-      this.upcomingEventArray  = data;
+      this.upcomingEventArray = data;
       this.prefService.upcomingEventData = data;
     },
       (error: any) => {
@@ -138,7 +157,7 @@ export class HomeComponent implements OnInit {
     console.log("coinContainer clicked");
   }
   lifeContainer() {
-    this.lifePopup = true;
+    this.objService.updateLifepopupStatus(true);
     console.log("lifeContainer clicked");
   }
   changeLifeCount(event: any) {
@@ -161,14 +180,21 @@ export class HomeComponent implements OnInit {
       this.life2 = a[1];
     }
     // this.lifePrice = 0;
-    this.lifePrice = 100 * +this.lifeBuyCount;
+    this.lifePrice = this.lifeFixedPrice * this.lifeBuyCount;
   }
   buyLife() {
+    if(this.lifePrice > this.walletAmount){
+      this.objService.updateLifepopupStatus(false);
+      this.route.navigate(['wallet']);
+      this.objService.showErrorToast("Not enough balance", "");
+      return;
+    }
     this.objService.lifeCredit({ amount: this.lifePrice, life: this.lifeBuyCount }).subscribe((data: any) => {
       console.log(data);
       console.log("life credit")
-      this.lifePopup = false;
+      this.objService.updateLifepopupStatus(false);
       this.objService.showSuccessToast(data.message, '');
+      this.getUserDetail();
     },
       (error: any) => {
         console.log(error);
@@ -186,6 +212,7 @@ export class HomeComponent implements OnInit {
   }
 
   eventCounter(startAtTime: any, length: number) {
+    clearInterval(this.interval1);
     this.interval1 = setInterval(() => {
       var currentTime = new Date().getTime();
       var diffMilliseconds = startAtTime - currentTime;
@@ -202,6 +229,7 @@ export class HomeComponent implements OnInit {
         timer = { h1, h2, m1, m2, s1, s2 };
         this.eventStartTime.unshift(timer);
         this.eventStartTime.length = length;
+        // clearInterval(this.interval1);
       } else {
         h1 = timeDifference[0]
         h2 = timeDifference[1]
@@ -227,6 +255,8 @@ export class HomeComponent implements OnInit {
   setting() {
     this.objService.getSetting().subscribe((data: any) => {
       console.log(data);
+      this.lifeFixedPrice = data.life_price;
+      this.currency = data.currency;
       this.prefService.paystackData = data;
       localStorage.setItem('paystack', JSON.stringify(data));
     },

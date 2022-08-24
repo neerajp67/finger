@@ -1,14 +1,15 @@
+<ngx-ui-loader></ngx-ui-loader>
 <div class="container">
     <div class="headerOption">
         <div class="row">
-            <div class="col-4">
+            <div class="col-5">
                 <div class="coin-container" (click)="coinContainer()">
                     <img src="../../../assets/icons/coinIcon.png" alt="coins">
-                    <p>{{walletAmount}}</p>
+                    <p>{{currency}} {{walletAmount}}</p>
                 </div>
             </div>
-            <div class="col-5"></div>
-            <div class="col-3">
+            <div class="col-3"></div>
+            <div class="col-4">
                 <div class="life-container" (click)="lifeContainer()">
                     <img src="../../../assets/icons/heartIcon.png" alt="lifes">
                     <p>{{life}}</p>
@@ -24,57 +25,58 @@
     </div>
 
     <h1 class="heading-main">Today Event</h1>
-    <h2 class="heading-sub">
-        <img src="../../../assets/icons/coinIcon.png" alt="coin">
-        10 to join event
+    <h2 class="heading-sub" *ngIf="myEvents.length!=0">
+        <img src="../../../assets/icons/heartIcon.png" alt="coin">
+        {{myEvents[0].entry}} to join event
     </h2>
-    <div class="d-flex flex-row flex-nowrap overflow-auto" >
+    <div class="d-flex flex-row flex-nowrap overflow-auto" *ngIf="myEvents.length!=0">
         <div *ngFor="let event of myEvents; let i = index">
-        <div class="hilight-event" >
-            <div class="game-title">
-                <p>{{event.title}}</p>
-            </div>
-            <div class="game-price">
-                <p>Price Money <span>${{event.prize}}</span></p>
-            </div>
-            <div class="event-entry">
-                <div class="join-btn" (click)="joinMainEvent(event.id)">
-                    <p>Join Event</p>
+            <div class="hilight-event">
+                <div class="game-title">
+                    <p>{{event.title}}</p>
                 </div>
-                <div class="join-timer-main">
-                    <div class="time-container">
-                        <div class="timer">
-                            <p class="time">{{eventStartTime[i].h1}}</p>
-                        </div>
-                        <div class="timer" >
-                            <p class="time">{{eventStartTime[i].h2}}</p>
-                        </div>
-                        <p class="time-separator">:</p>
-                        <div class="timer">
-                            <p class="time">{{eventStartTime[i].m1}}</p>
-                        </div>
-                        <div class="timer">
-                            <p class="time">{{eventStartTime[i].m2}}</p>
-                        </div>
-                        <p class="time-separator">:</p>
-                        <div class="timer">
-                            <p class="time">{{eventStartTime[i].s1}}</p>
-                        </div>
-                        <div class="timer">
-                            <p class="time">{{eventStartTime[i].s2}}</p>
-                        </div>
+                <div class="game-price">
+                    <p>Price Money <span>{{currency}} {{event.prize}}</span></p>
+                </div>
+                <div class="event-entry">
+                    <div class="join-btn" (click)="joinMainEvent(event.id)">
+                        <p>Join Event</p>
                     </div>
-                    <div class="timer-text-container-main">
-                        <p>HOURS</p>
-                        <p>MINUTES</p>
-                        <p>SECOND</p>
+                    <div class="join-timer-main">
+                        <div class="time-container">
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].h1}}</p>
+                            </div>
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].h2}}</p>
+                            </div>
+                            <p class="time-separator">:</p>
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].m1}}</p>
+                            </div>
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].m2}}</p>
+                            </div>
+                            <p class="time-separator">:</p>
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].s1}}</p>
+                            </div>
+                            <div class="timer">
+                                <p class="time">{{eventStartTime[i].s2}}</p>
+                            </div>
+                        </div>
+                        <div class="timer-text-container-main">
+                            <p>HOURS</p>
+                            <p>MINUTES</p>
+                            <p>SECOND</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    <div class="upcoming-event-container">
+
+    <div class="upcoming-event-container" *ngIf="upcomingEventArray.length != 0">
         <div class="upcoming-event-heading">
             <p style="float: left;">Upcoming Events</p>
             <p style="float: right; margin-right: 10px;">></p>
@@ -89,7 +91,7 @@
                     </div>
                     <div class="card-game-price">
                         <p>Price Money</p>
-                        <p>${{event.prize}}</p>
+                        <p>{{currency}} {{event.prize}}</p>
                     </div>
                     <div class="card-event-time">
                         <div class="card-date">
@@ -155,7 +157,7 @@
     </div>
 </div>
 
-<div class="popup-container"*ngIf="lifePopup">
+<div class="popup-container" *ngIf="lifePopup">
     <div class="event-reminder-popup">
         <div class="popup-header">
             <img src="../../../assets/icons/lifeIcon.png" alt="clock">
@@ -184,10 +186,10 @@
                 </div>
                 <div style="display: flex; justify-content: center;">
                     <div class="lifeAmount">
-                        <p>{{lifePrice}}</p>
+                        <p>{{currency}} {{lifePrice}}</p>
                     </div>
                     <div class="join-btn" style="background: linear-gradient(180deg, #9EADF7 0%, #716AE7 100%);"
-                    (click)="buyLife()">
+                        (click)="buyLife()">
                         <p style="color: #FFFFFF;">Add Live</p>
                     </div>
                 </div>
@@ -212,8 +214,9 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="iconContainer">
-                <img src="../../../assets/icons/userIcon.png" alt="Profile" (click)="navigate('profile')">
+            <div class="iconContainer" >
+                <img src="../../../assets/icons/userIcon.png" alt="Profile" 
+                style="height: 24px; width: 20px;" (click)="navigate('profile')">
             </div>
         </div>
     </div>

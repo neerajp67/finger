@@ -8,9 +8,10 @@ import {
 import { Observable } from 'rxjs';
 import { PrefrenceService } from './prefrence.service';
 
+
 @Injectable()
 export class HeadersInterceptor implements HttpInterceptor {
-authToken: any;
+  authToken: any;
   constructor(private prefService: PrefrenceService) {
     // this.prefService.getStorage('authToken').then(token => {
     //   this.authToken = token
@@ -18,14 +19,15 @@ authToken: any;
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log(this.prefService.getStorage('authToken'));
+
+    // console.log(this.prefService.getStorage('authToken'));
     var authToken = localStorage.getItem('authToken');
     request = request.clone({
       setHeaders: {
-        'Authorization': 'Bearer '+ authToken,
+        'Authorization': 'Bearer ' + authToken,
       }
     })
-    return next.handle(request);
 
+    return next.handle(request);
   }
 }

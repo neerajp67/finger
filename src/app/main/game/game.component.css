@@ -8,20 +8,20 @@
 .user-count-container {
     border-radius: 24px;
     background-image: linear-gradient(#9EADF7, #716AE7);
-    height: 38px;
+    height: 34px;
     width: auto;
     padding: 4px;
 }
 
 .user-count-container>img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     float: left;
 }
 
 .user-count-container>p {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
     /* float: right; */
@@ -30,20 +30,20 @@
 .life-container {
     border-radius: 24px;
     background-image: linear-gradient(#9EADF7, #716AE7);
-    height: 38px;
+    height: 34px;
     /* width: 50x; */
     padding: 4px;
 }
 
 .life-container>img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     float: left;
 }
 
 .life-container>p {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     float: right;
     margin-right: 5px;
@@ -52,7 +52,7 @@
 .balance-container {
     border-radius: 24px;
     background-image: linear-gradient(#9EADF7, #716AE7);
-    height: 38px;
+    height: 34px;
     justify-content: center;
     display: flex;
     /* width: 50x; */
@@ -60,16 +60,43 @@
 }
 
 .balance-container>img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
 }
 
 .balance-container>p {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     float: right;
     margin-right: 5px;
+}
+
+@media only screen and (max-width: 300px) {
+    .life-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .life-container>p {
+        font-size: 12px;
+        font-weight: normal;
+    }
+     .user-count-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .user-count-container>p {
+        font-size: 12px;
+        font-weight: normal;
+    }
+      .balance-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .balance-container>p {
+        font-size: 12px;
+        font-weight: normal;
+    }
 }
 
 
@@ -369,7 +396,7 @@
     font-weight: 600;
 }
 
-.game-complete-popup{
+.game-complete-popup {
     top: 0;
     margin-left: 6px;
     margin-right: 6px;
@@ -393,11 +420,13 @@
     justify-content: center;
     align-items: center;
 }
-.popup-position-container > img{
+
+.popup-position-container>img {
     height: 110px;
     width: 110px;
     margin-bottom: -15px;
 }
+
 .skip-btn {
     height: 30px;
     width: 16%;

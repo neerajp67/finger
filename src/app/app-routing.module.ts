@@ -9,13 +9,13 @@ import { RegistrationComponent } from './signin/registration/registration.compon
 import { SliderComponent } from './signin/slider/slider.component';
 
 const routes: Routes = [
-  {path : '', component : LoginComponent},
+  {path : '', component : SliderComponent},
+  {path : 'login', component : LoginComponent},
   {path : 'register', component : RegistrationComponent},
   {path : 'home', component : HomeComponent},
   {path : 'game', component : GameComponent},
   {path : 'wallet', component : WalletComponent},
   {path : 'profile', component : ProfileComponent},
-  {path : 'slider', component : SliderComponent},
   {path : '**',redirectTo: '', component : LoginComponent},
 ];
 

@@ -24,6 +24,10 @@ const config: CapacitorConfig = {
       iconColor: '#CE0B7C',
       //sound: 'beep.mp3',
     },
+    GoogleAuth: {
+      scopes: ["profile","home", "wallet"],
+      serverClientId: "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com"
+      },
     PushNotifications: {
       presentationOptions: ['badge','alert', 'sound'],
     },

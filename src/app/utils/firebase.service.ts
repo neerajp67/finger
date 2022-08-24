@@ -8,11 +8,34 @@ import { LocalNotificationService } from './local-notification.service';
 })
 export class FirebaseService {
   deviceToken: any;
+  deviceId: any;
   notification: any;
   platform: any;
   notificationList: any;
 
+
+  // deviceId: any;
+  // deviceType: any;
+  // deviceTocken: any;
+
   constructor(private localNotification: LocalNotificationService) { }
+
+    // async dat() {
+    //   await Device.getInfo()
+    //     .then((result) => {
+    //       var platform = result.platform;
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    //   await Device.getId()
+    //     .then((result) => {
+    //       var deviceId = result;
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
 
   async addFirebaseListeners() {
     await PushNotifications.addListener("registration", (token) => {
@@ -45,6 +68,13 @@ export class FirebaseService {
     await Device.getInfo()
       .then((result) => {
         this.platform = result.platform;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      await Device.getId()
+      .then((result) => {
+        this.deviceId = result.uuid;
       })
       .catch((err) => {
         console.log(err);
@@ -143,5 +173,5 @@ export class FirebaseService {
   //   })
   // }
 
- 
+
 }

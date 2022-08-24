@@ -1,0 +1,50 @@
+.slider-image-container {
+    height: 100%;
+}
+
+.slider-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 80%;
+}
+
+.slider-image-container {
+    height: 300px;
+    width: 100%;
+}
+
+.slider-caption {
+    margin-top: 40px;
+    margin-bottom: -10px;
+    color: #F6F1FB;
+    text-align: center;
+}
+
+.btn-container {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+   
+}
+.center{
+    width: 90%;
+    margin: auto;
+}
+
+h6 {
+    color: #F6F1FB;
+}
+
+.skip {
+    margin-bottom: 20px;
+    float: left;
+}
+
+.next {
+    margin-bottom: 20px;
+    float: right;
+}

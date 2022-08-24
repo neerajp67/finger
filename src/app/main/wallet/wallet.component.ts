@@ -23,6 +23,8 @@ export class WalletComponent implements OnInit {
   addAmountValue: any;
   withdwarAmountValue: any;
   paystackReference: any;
+  currency: any;
+  addAmountBtn: boolean = false;
 
   constructor(private route: Router, private objService: FingerService,
     private prefService: PrefrenceService) { }
@@ -30,8 +32,10 @@ export class WalletComponent implements OnInit {
   ngOnInit(): void {
     var paystackData = localStorage.getItem('paystack');
     if (paystackData != null) {
-      this.paystackKey = JSON.parse(paystackData);
-      this.paystackKey = this.paystackKey.paystack_public_key;
+      // this.paystackKey = JSON.parse(paystackData);
+      var data = JSON.parse(paystackData);
+      this.paystackKey = data.paystack_public_key;
+      this.currency = data.currency;
     }
     this.paystackReference = `ref-${Math.ceil(Math.random() * 10e13)}`;
     // var user = localStorage.getItem('user');
@@ -85,6 +89,7 @@ export class WalletComponent implements OnInit {
   }
 
   paymentInit() {
+    
     console.log('Payment initialized');
   }
 
@@ -112,6 +117,11 @@ export class WalletComponent implements OnInit {
   valuechange(event: any) {
     // console.log(event.target.value);
     this.addAmountValue = event.target.value
+    if(this.addAmountValue < 3){
+      this.addAmountBtn = false;
+    } else {
+      this.addAmountBtn = true;
+    }
   }
   valueWithdrawchange(event: any) {
     // console.log(event.target.value);

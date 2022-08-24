@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { FingerService } from './finger.service';
+import { LocalNotificationService } from './local-notification.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +11,8 @@ export class EchoService {
   // Pusher = Pusher;
 echo: any;
 participants: any = 0;
-  constructor(private objService: FingerService) {
+  constructor(private objService: FingerService,
+    private localNotification: LocalNotificationService) {
   }
   initializeEcho(userId: any) {
     this.echo = new Echo({
@@ -44,13 +46,15 @@ participants: any = 0;
       },
     });
     try {
-      this.echo.private(`App.Models.User.` + userId).notification((valv: any) => {
+      this.echo.private(`Game.User.` + userId).notification((valv: any) => {
         var arrSuccess = ['EVENT_ENTER', 'EVENT_WIN', 'EVENT_START', 'EVENT_JOIN'];
         // var arrError= ['EVENT_LOSS', 'EVENT_LOSS', 'EVENT_DISQ'];
         if(arrSuccess.includes(valv.key)){
-          this.objService.showSuccessToast(valv.message, valv.title)
+          this.localNotification.sendLocal(valv.title, valv.message, 1)
+          // this.objService.showSuccessToast(valv.message, valv.title)
         } else{
-          this.objService.showErrorToast(valv.message, valv.title)
+          this.localNotification.sendLocal(valv.title, valv.message, 2)
+          // this.objService.showErrorToast(valv.message, valv.title)
         }
         console.log(valv);
         console.log(valv.title, valv.message);

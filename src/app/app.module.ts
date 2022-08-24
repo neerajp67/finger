@@ -24,6 +24,8 @@ import { EchoService } from './utils/echo.service';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { SliderComponent } from './signin/slider/slider.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';  
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
 export function playerFactory() {
   return player;
@@ -39,7 +41,7 @@ export function playerFactory() {
     ProfileComponent,
     WalletComponent,
     GameComponent,
-    SliderComponent
+    SliderComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,9 @@ export function playerFactory() {
     Angular4PaystackModule.forRoot('pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'),
     ToastrModule.forRoot(), 
     BrowserAnimationsModule,
-    LottieModule.forRoot({ player: playerFactory })
+    LottieModule.forRoot({ player: playerFactory }),
+    NgbModule,
+    NgxUiLoaderModule,
   ],
   providers: [
     FingerService,

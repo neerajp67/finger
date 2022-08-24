@@ -5,6 +5,8 @@ import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
 // import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 // import * as firebase from 'firebase';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { FirebaseService } from 'src/app/utils/firebase.service';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +22,14 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private route: Router,
     private objService: FingerService,
-    private prefService: PrefrenceService) {
+    private prefService: PrefrenceService,
+    private firebaseService: FirebaseService) {
+    // var authToken = localStorage.getItem('authToken');
     var authToken = localStorage.getItem('authToken');
+    if (authToken != null) {
+      route.navigate(['home']);
+      return;
+    }
     // if (authToken != null || authToken != '') {
     //   route.navigate(['main']);
     //   return;
@@ -33,11 +41,13 @@ export class LoginComponent implements OnInit {
     //     return;
     //   }
     // });
-
   }
+
+
 
   ngOnInit(): void {
     // firebase.initializeApp(config);
+    this.ionViewDidEnter(); 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
@@ -47,9 +57,20 @@ export class LoginComponent implements OnInit {
   navigateToRegister() {
     this.route.navigate(['register']);
   }
-  signInWithGoogle() {
-    // const result = FirebaseAuthentication.signInWithGoogle();
-    // return result.user
+  // signInWithGoogle() {
+  //   // const result = FirebaseAuthentication.signInWithGoogle();
+  //   // return result.user
+  // }
+  async signInWithGoogle() {
+    
+    const user = await GoogleAuth.signIn();
+    if (user) {
+      console.log(user);
+      this.firebaseLogin(user);
+    }
+  }
+  ionViewDidEnter(){
+    GoogleAuth.initialize();
   }
   // const signInWithGoogle = async () => {
   //   const result = await FirebaseAuthentication.signInWithGoogle();
@@ -62,6 +83,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(form: FormGroup) {
+    console.log("deviceInfo Login");
+    console.log(this.firebaseService.deviceToken);
+    console.log(this.firebaseService.platform);
+    console.log(this.firebaseService.deviceId);
     if (form.value.email == "") {
       // alert("please enter email");
       this.objService.showErrorToast("please enter email", "");
@@ -73,13 +98,14 @@ export class LoginComponent implements OnInit {
     }
     this.objService.login({
       email: form.value.email, password: form.value.password,
-      device_id: '123', device_type: 'android', device_token: '123'
+      device_id: this.firebaseService.deviceId, device_type: this.firebaseService.platform, device_token: this.firebaseService.deviceToken
     }).subscribe((data: any) => {
       console.log(data);
       this.objService.showSuccessToast("Logged in successfully", '');
       this.prefService.setName('authToken', data.token);
       localStorage.setItem('authToken', data.token);
       this.route.navigate(['home']);
+      // this.route.navigate(['slider']);
     },
       (error: any) => {
         console.log('error');
@@ -93,7 +119,8 @@ export class LoginComponent implements OnInit {
     console.log(user);
     this.objService.firebaseLogin({
       email: user.email, firebase_id: user.id,
-      device_id: '123', device_type: 'android', device_token: '123'
+      device_id: this.firebaseService.deviceId , device_type: this.firebaseService.platform, 
+      device_token: this.firebaseService.deviceToken
     }).subscribe((data: any) => {
       console.log(data);
       localStorage.setItem('authToken', data.token);

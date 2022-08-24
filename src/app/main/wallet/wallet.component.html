@@ -12,15 +12,15 @@
     Pay with Paystack
   </angular4-paystack> -->
     <p class="heading">Wallet</p>
-    <p class="walletBalance">${{walletBalance}}</p>
-    <p class="walletBalanceText">Wallet Ammount</p>
+    <p class="walletBalance">{{currency}} {{walletBalance}}</p>
+    <p class="walletBalanceText">Wallet Amount</p>
     <div class="row" style="margin: 6px; width: auto;">
         <div class="col-8">
             <div class="form-container">
                 <div class="form-group">
                     <label for="addAmount" style="margin-bottom: 5px;">Add Amount</label><br>
-                    <input type="number" class="form-control" id="addAmount" placeholder="$100" 
-                    [(value)]="addAmountValue" #addAmountInput (change)="valuechange($event)">
+                    <input type="number" class="form-control" id="addAmount" placeholder="{{currency}} 100"
+                        [(value)]="addAmountValue" #addAmountInput (change)="valuechange($event)">
                 </div>
             </div>
         </div>
@@ -28,27 +28,23 @@
             <!-- <div class="addAmountBtn" id="addAmountBtn" (click)="addAmount()">
                 <p>Add Amount</p>
             </div> -->
-            <button angular4-paystack class="addAmountBtn"
-            [key]="paystackKey" 
-            [email]="userEmail"
-                [amount]="addAmountValue" [ref]="paystackReference" 
-                (paymentInit)="paymentInit()"
-                (onClose)="paymentCancel()" 
-                (callback)="paymentDone($event)"
+            <button angular4-paystack class="addAmountBtn" [key]="paystackKey"
+                [email]="userEmail" [currency]="currency" [amount]="addAmountValue * 100" [ref]="paystackReference"
+                (paymentInit)="paymentInit()" (onClose)="paymentCancel()" (callback)="paymentDone($event)"
                 (click)="addAmount()">
                 Add Amount
             </button>
         </div>
     </div>
-    <p class="addAmountText">lorem ipsum dummy text</p>
+    <!-- <p class="addAmountText">lorem ipsum dummy text</p> -->
 
-    <div class="row" style="margin: 6px; width: auto;">
+    <div class="row" style="margin: 12px 6px 6px 6px; width: auto;">
         <div class="col-8">
             <div class="form-container">
                 <div class="form-group">
                     <label for="withdrawdAmount" style="margin-bottom: 5px;">Withdraw Amount</label><br>
-                    <input type="number" class="form-control" placeholder="$100"
-                      (change)="valueWithdrawchange($event)">
+                    <input type="number" class="form-control" placeholder="{{currency}} 100"
+                        (change)="valueWithdrawchange($event)">
                 </div>
             </div>
         </div>
@@ -58,7 +54,7 @@
             </div>
         </div>
     </div>
-    <p class="addAmountText">lorem ipsum dummy text</p>
+    <!-- <p class="addAmountText">lorem ipsum dummy text</p> -->
 
     <div class="transaction-container">
         <div class="row rowMain">
@@ -82,7 +78,7 @@
                 </div>
                 <div class="col-4 colRight"
                     [ngClass]="{'credit': transaction.type == 'C', 'debit' : transaction.type == 'D'}">
-                    ${{transaction.amount}}
+                    {{currency}} {{transaction.amount}}
                 </div>
                 <hr class="rowSaparater">
             </div>
@@ -114,7 +110,8 @@
         </div>
         <div class="col-4">
             <div class="iconContainer">
-                <img src="../../../assets/icons/userIcon.png" alt="Profile" (click)="navigate('profile')">
+                <img src="../../../assets/icons/userIcon.png" alt="Profile" style="height: 24px; width: 20px;"
+                    (click)="navigate('profile')">
             </div>
         </div>
     </div>

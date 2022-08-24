@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">finger-game</string>
-    <string name="title_activity_main">finger-game</string>
+    <string name="app_name">Last Finger</string>
+    <string name="title_activity_main">Last Finger</string>
     <string name="package_name">com.example.app</string>
     <string name="custom_url_scheme">com.example.app</string>
   <string name="facebook_app_id">3384914905114267</string>
   <string name="facebook_client_token">3384914905114267</string>
+  <string name="server_client_id">1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com</string>
 </resources>

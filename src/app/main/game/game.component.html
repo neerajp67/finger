@@ -18,7 +18,7 @@
             <div class="col-4">
                 <div class="balance-container">
                     <!-- <img src="../../../assets/icons/settingIcon.png" alt="settings"> -->
-                    <p>${{walletAmount}}</p>
+                    <p>{{currency}} {{prizeMoney}}</p>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
             <p>Second</p>
         </div>
     </div>
-    <div class="timmer-after" *ngIf="!gameAboutToStart && !gameStarted">
+    <div class="timmer-after" *ngIf="!gameAboutToStart && (!gameWon || !gameLost)">
         <p>Game is not started yet</p>
     </div>
      <div class="timmer-after" *ngIf="gameLost">
@@ -87,9 +87,9 @@
         
     </div>
     <div class="addvertise">
-        <iframe width="100%" height="180" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe>
+        <!-- <iframe width="100%" height="180" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe> -->
 
-        <!-- <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise"> -->
+        <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise">
     </div>
     <div class="game-pad-container">
         <div class="game-pad" #gamePad id="gamePad">

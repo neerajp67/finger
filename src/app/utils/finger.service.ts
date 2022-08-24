@@ -2,15 +2,33 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FingerService {
+  private lifepopupsubject = new Subject<any>();
+  private iframVisibility = new Subject<any>();
   baseUrl = environment.baseUrl;
-  constructor(private httpClient: HttpClient, 
+
+
+  constructor(private httpClient: HttpClient,
     private toastr: ToastrService,
-    ) { }
+  ) { }
+
+  updateLifepopupStatus(value: boolean) {
+    this.lifepopupsubject.next({ status: value });
+  }
+  getLifePopupStatus(): Observable<any> {
+    return this.lifepopupsubject.asObservable();
+  }
+  updateiframVisibility(value: boolean) {
+    this.iframVisibility.next({ status: value });
+  }
+  getiframVisibility(): Observable<any> {
+    return this.iframVisibility.asObservable();
+  }
 
   // signInWithGoogle(googleLoginOptions: any): void {
   //   this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID, googleLoginOptions);
@@ -86,11 +104,14 @@ export class FingerService {
   authorizer(obj: any) {
     return this.httpClient.post(this.baseUrl + '/api/broadcasting/auth', obj);
   }
-  showSuccessToast(successMessage: any, successitle: any){
+  showSuccessToast(successMessage: any, successitle: any) {
     this.toastr.success(successMessage, successitle);
   }
-  showErrorToast(errorMessage: any, errorTitle: any){
+  showErrorToast(errorMessage: any, errorTitle: any) {
     this.toastr.error(errorMessage, errorTitle);
+  }
+  winEvent() {
+    return this.httpClient.get(this.baseUrl + '/game-events/win-event');
   }
 }
 

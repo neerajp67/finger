@@ -9,7 +9,7 @@
     margin-bottom: 0;
     bottom: 0;
     width: 100%;
-    height: 50px;
+    height: 60px;
     padding-top: 5px;
     text-align: center;
 }
@@ -26,20 +26,20 @@
 .coin-container {
     border-radius: 24px;
     background-image: linear-gradient(#9EADF7, #716AE7);
-    height: 38px;
+    height: 34px;
     width: auto;
     padding: 4px;
 }
 
 .coin-container>img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     float: left;
 }
 
 .coin-container>p {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     /* float: right; */
     text-align: center;
@@ -49,20 +49,20 @@
 .life-container {
     border-radius: 24px;
     background-image: linear-gradient(#9EADF7, #716AE7);
-    height: 38px;
+    height: 33px;
     /* width: 50x; */
     padding: 4px;
 }
 
 .life-container>img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     float: left;
 }
 
 .life-container>p {
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     float: right;
     margin-right: 5px;
