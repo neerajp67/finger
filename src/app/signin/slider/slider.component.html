@@ -27,9 +27,11 @@
         </ngb-carousel>  
     </div>  
    -->
-<div class="slider-container">
-    <ngb-carousel *ngIf="images" [showNavigationArrows]="showNavigationArrows"
-        [showNavigationIndicators]="showNavigationIndicators">
+<!-- <div class="slider-container">
+    <ngb-carousel *ngIf="images" [showNavigationArrows]="showNavigationArrows" #carousel id="carousel"
+        [showNavigationIndicators]="showNavigationIndicators" 
+        
+        >
         <ng-template ngbSlide *ngFor="let image of images; let i=index">
             <div class="picsum-img-wrapper slider-image-container">
                 <img [src]="image" alt="Random slide">
@@ -40,14 +42,23 @@
             </div>
         </ng-template>
     </ngb-carousel>
+</div> -->
+<div class="slider-container">
+    <div class="carousel">
+        <img [src]="sliderImage" alt="Random slide">
+        <div class="slider-caption">
+            <h3>{{sliderHeading}}</h3>
+            <p>{{sliderSubHeading}}</p>
+        </div>
+    </div>
+
 </div>
 
 <div class="btn-container">
     <div class="center">
         <h6><span (click)="navigate('skip')" class="skip"> Skip</span>
-            <span (click)="navigate('next')" class="next">Next</span>
+            <span (click)="onNext()" class="next">Next</span>
         </h6>
-
     </div>
 </div>
 <!-- <div class="btn-group" role="group" aria-label="Carousel toggle controls">

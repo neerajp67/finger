@@ -28,6 +28,6 @@ export class PrefrenceService {
   myEventdata: any[] = [];
   upcomingEventData: any[] = [];
   walletData: any[] = [];
-  profileData: any[] = [];
-  paystackData: any[] = [];
+  profileData: any;
+  paystackData: any;
 }

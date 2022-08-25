@@ -8,12 +8,12 @@
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    width: 80%;
+    /* max-width: 60%; */
 }
 
 .slider-image-container {
     height: 300px;
-    width: 100%;
+    width: 80%;
 }
 
 .slider-caption {

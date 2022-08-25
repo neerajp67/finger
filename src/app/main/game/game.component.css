@@ -72,7 +72,33 @@
     margin-right: 5px;
 }
 
-@media only screen and (max-width: 300px) {
+@media only screen and (max-width: 350px) {
+    .life-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .life-container>p {
+        font-size: 12px;
+        font-weight: normal;
+    }
+     .user-count-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .user-count-container>p {
+        font-size: 12px;
+        font-weight: normal;
+    }
+      .balance-container>img {
+        width: 22px;
+        height: 22px;
+    }
+    .balance-container>p {
+        font-size: 10px;
+        font-weight: normal;
+    }
+}
+@media only screen and (max-width: 350px) {
     .life-container>img {
         width: 22px;
         height: 22px;
@@ -98,7 +124,6 @@
         font-weight: normal;
     }
 }
-
 
 
 
@@ -248,7 +273,7 @@
 
 .addvertise {
     background: #000000;
-    height: 180px;
+    height: 30%;
     width: 100%;
     border-radius: 14px;
     /* margin: 6px; */

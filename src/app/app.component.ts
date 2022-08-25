@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
+import { AnimationItem } from 'lottie-web';
+import { AnimationOptions } from 'ngx-lottie';
 import { Subscription } from 'rxjs';
 import { FingerService } from './utils/finger.service';
 import { FirebaseService } from './utils/firebase.service';
@@ -16,20 +18,45 @@ import { PrefrenceService } from './utils/prefrence.service';
 })
 export class AppComponent {
   title = 'FingerGame';
-  subscription!: Subscription;
+  loader: boolean = false;
+  homeLoader: boolean = false;
+  subscriptionLifePopup!: Subscription;
+  subscriptionLoader!: Subscription;
+  subscriptionHomeLoader!: Subscription;
   lifePopup: boolean = false;
   versionUpdateRequired: boolean = false;
   appUpdateLink: any;
+
+  loaderoptions: AnimationOptions = {
+    path: '../assets/loaderAnim.json',
+  };
+  loaderoptionsHome: AnimationOptions = {
+    path: '../assets/loaderAnim.json',
+  };
   constructor(private objService: FingerService,
     private firebaseService: FirebaseService,
     private localNotification: LocalNotificationService,
     private prefService: PrefrenceService,
     private route: Router) {
-    this.subscription = this.objService.getLifePopupStatus().subscribe((value: any) => {
+    this.subscriptionLifePopup = this.objService.getLifePopupStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.lifePopup = true;
       } else {
         this.lifePopup = false;
+      }
+    });
+    this.subscriptionLoader = this.objService.getLoaderStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.loader = true;
+      } else {
+        this.loader = false;
+      }
+    });
+     this.subscriptionHomeLoader = this.objService.getHomeLoaderStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.homeLoader = true;
+      } else {
+        this.homeLoader = false;
       }
     });
   }
@@ -94,4 +121,7 @@ export class AppComponent {
     window.open(this.appUpdateLink,'_newtab');
   }
 
+  animationCreated(animationItem: AnimationItem): void {
+    console.log(animationItem);
+  }
 }

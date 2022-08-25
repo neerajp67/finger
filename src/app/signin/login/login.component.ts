@@ -98,7 +98,11 @@ export class LoginComponent implements OnInit {
     }
     this.objService.login({
       email: form.value.email, password: form.value.password,
-      device_id: this.firebaseService.deviceId, device_type: this.firebaseService.platform, device_token: this.firebaseService.deviceToken
+      device_id: this.firebaseService.deviceId, 
+      // device_type: this.firebaseService.platform, 
+      // device_token: this.firebaseService.deviceToken
+      device_type: 'android', 
+      device_token: '123'
     }).subscribe((data: any) => {
       console.log(data);
       this.objService.showSuccessToast("Logged in successfully", '');

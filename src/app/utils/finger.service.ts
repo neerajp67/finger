@@ -9,7 +9,12 @@ import { Observable, Subject } from 'rxjs';
 })
 export class FingerService {
   private lifepopupsubject = new Subject<any>();
+  private loaderSubject = new Subject<any>();
+  private homeLoader = new Subject<any>();
   private iframVisibility = new Subject<any>();
+
+  private myEvents = new Subject<any>();
+  private upcomingEvents = new Subject<any>();
   baseUrl = environment.baseUrl;
 
 
@@ -17,11 +22,36 @@ export class FingerService {
     private toastr: ToastrService,
   ) { }
 
+  updateMyEvents(value: any) {
+    this.myEvents.next({ status: value });
+  }
+  getMyEvents(): Observable<any> {
+    return this.myEvents.asObservable();
+  }
+  updateUpcomingEvents(value: any) {
+    this.upcomingEvents.next({ status: value });
+  }
+  getUpcomingEvents(): Observable<any> {
+    return this.upcomingEvents.asObservable();
+  }
+
   updateLifepopupStatus(value: boolean) {
     this.lifepopupsubject.next({ status: value });
   }
   getLifePopupStatus(): Observable<any> {
     return this.lifepopupsubject.asObservable();
+  }
+  updateLoaderStatus(value: boolean) {
+    this.loaderSubject.next({ status: value });
+  }
+  getLoaderStatus(): Observable<any> {
+    return this.loaderSubject.asObservable();
+  }
+  updateHomeLoaderStatus(value: boolean) {
+    this.homeLoader.next({ status: value });
+  }
+  getHomeLoaderStatus(): Observable<any> {
+    return this.homeLoader.asObservable();
   }
   updateiframVisibility(value: boolean) {
     this.iframVisibility.next({ status: value });

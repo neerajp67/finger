@@ -4,10 +4,16 @@
         <div class="update-app-content">
             <h2 class="popup-heading">Please Update App</h2>
             <h6>New version available, to continue the game please update the application</h6>
-            <div class="update-btn"
-                (click)="updateApp()">
+            <div class="update-btn" (click)="updateApp()">
                 <p>Update</p>
             </div>
         </div>
     </div>
+</div>
+
+<div class="popup-container" *ngIf="loader">
+    <ng-lottie [options]="loaderoptions" (animationCreated)="animationCreated($event)"></ng-lottie>
+</div>
+<div class="popup-container" *ngIf="homeLoader">
+    <ng-lottie [options]="loaderoptionsHome" (animationCreated)="animationCreated($event)"></ng-lottie>
 </div>

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { EchoService } from 'src/app/utils/echo.service';
 import { FingerService } from 'src/app/utils/finger.service';
@@ -12,12 +12,15 @@ import { Subscription } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewChecked {
   banners: any[] = [];
+  appSetting: any[] = [];
   userDetail: any[] = [];
   myEvents: any[] = [];
+  subscriptionMyEvents!: Subscription;
   eventStartTime: any[] = [];
   upcomingEventArray: any[] = [];
+  subscriptionUpcomingEvents!: Subscription;
   walletAmount: any;
   currency: any;
   life: any;
@@ -31,34 +34,62 @@ export class HomeComponent implements OnInit {
 
   // messages: any[] = [];
   subscription!: Subscription;
+ 
 
   constructor(private route: Router, private objService: FingerService,
     private datePipe: DatePipe,
     private prefService: PrefrenceService,
-    private echo: EchoService,
-    private loader: NgxUiLoaderService) {
-      this.subscription = this.objService.getLifePopupStatus().subscribe((value: any) => {
-        if (Object.values(value)[0]) {
-          this.lifePopup = true;
-        } else {
-          this.lifePopup = false;
-        }
-      });
+    private echo: EchoService) {
+    // this.subscriptionMyEvents = this.objService.getMyEvents().subscribe((value: any) => {
+    //   if (value.status) {
+    //     this.myEvents = value.status;
+    //     if (this.myEvents.length > 0) {
+    //       for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
+    //         var startAtTime = new Date(this.myEvents[i].enter_at).getTime();
+    //         this.eventCounter(startAtTime, this.myEvents.length);
+    //       }
+    //     }
+    //   } else {
+    //     this.getMyEvents();
+    //   }
+    // });
+    // this.subscriptionUpcomingEvents = this.objService.getUpcomingEvents().subscribe((value: any) => {
+    //   if (value.status) {
+    //     this.upcomingEventArray = value.status;
+    //   } else {
+    //     this.getEvents();
+    //   }
+    // });
+    this.subscription = this.objService.getLifePopupStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.lifePopup = true;
+      } else {
+        this.lifePopup = false;
+      }
+    });
   }
-
+  ngAfterViewChecked() {
+    this.objService.updateHomeLoaderStatus(false);
+  }
   ngOnInit(): void {
-    //  this.loader.start('fg-default');
-    // setTimeout(() => {
-
-    // }, 3000);
-
-    this.myEvents = this.prefService.myEventdata;
-    this.upcomingEventArray = this.prefService.upcomingEventData;
-    this.userDetail = this.prefService.profileData;
+    // this.objService.updateLoaderStatus(true);
+    this.objService.updateHomeLoaderStatus(true);
     this.getUserDetail();
-    this.getEvents();
     this.setting();
-    this.getMyEvents();
+    this.upcomingEventArray = this.prefService.upcomingEventData;
+    this.myEvents = this.prefService.myEventdata;
+    if (this.upcomingEventArray.length == 0) {
+      this.getEvents();
+    }
+    if (this.myEvents.length == 0) {
+      this.getMyEvents();
+    } else {
+      for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
+        var startAtTime = new Date(this.myEvents[i].enter_at).getTime();
+        this.eventCounter(startAtTime, this.myEvents.length);
+      }
+    }
+
     // if (this.userDetail.length == 0) {
     //   this.getUserDetail();
     // }
@@ -96,6 +127,7 @@ export class HomeComponent implements OnInit {
     this.objService.myEvent().subscribe((data: any) => {
       console.log(data);
       this.myEvents = data;
+      this.objService.updateMyEvents(this.myEvents)
       this.prefService.myEventdata = data;
       if (this.myEvents.length > 0) {
         for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
@@ -183,7 +215,7 @@ export class HomeComponent implements OnInit {
     this.lifePrice = this.lifeFixedPrice * this.lifeBuyCount;
   }
   buyLife() {
-    if(this.lifePrice > this.walletAmount){
+    if (this.lifePrice > this.walletAmount) {
       this.objService.updateLifepopupStatus(false);
       this.route.navigate(['wallet']);
       this.objService.showErrorToast("Not enough balance", "");
@@ -258,6 +290,7 @@ export class HomeComponent implements OnInit {
       this.lifeFixedPrice = data.life_price;
       this.currency = data.currency;
       this.prefService.paystackData = data;
+      this.appSetting = data;
       localStorage.setItem('paystack', JSON.stringify(data));
     },
       (error: any) => {

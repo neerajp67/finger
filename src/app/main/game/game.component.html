@@ -47,7 +47,7 @@
             <p>Second</p>
         </div>
     </div>
-    <div class="timmer-after" *ngIf="!gameAboutToStart && (!gameWon || !gameLost)">
+    <div class="timmer-after" *ngIf="gameNotStarted">
         <p>Game is not started yet</p>
     </div>
      <div class="timmer-after" *ngIf="gameLost">

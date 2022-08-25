@@ -5,21 +5,34 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { PrefrenceService } from './prefrence.service';
+import { FingerService } from './finger.service';
+import { finalize } from 'rxjs/operators';
 
 
 @Injectable()
 export class HeadersInterceptor implements HttpInterceptor {
   authToken: any;
-  constructor(private prefService: PrefrenceService) {
+  loader: boolean = false;
+  subscriptionLoader!: Subscription;
+
+  constructor(private prefService: PrefrenceService, 
+    private objService: FingerService) {
+    this.subscriptionLoader = this.objService.getLoaderStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.loader = true;
+      } else {
+        this.loader = false;
+      }
+    });
     // this.prefService.getStorage('authToken').then(token => {
     //   this.authToken = token
     // });
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
+    this.objService.updateLoaderStatus(true);
     // console.log(this.prefService.getStorage('authToken'));
     var authToken = localStorage.getItem('authToken');
     request = request.clone({
@@ -27,7 +40,8 @@ export class HeadersInterceptor implements HttpInterceptor {
         'Authorization': 'Bearer ' + authToken,
       }
     })
-
-    return next.handle(request);
+    // this.objService.updateLoaderStatus(false);
+    return next.handle(request)
+    .pipe(finalize(() => this.objService.updateLoaderStatus(false)));
   }
 }

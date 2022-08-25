@@ -20,8 +20,8 @@ export class WalletComponent implements OnInit {
 
   paystackKey: any = environment.paystackKey;
   userEmail: any;
-  addAmountValue: any;
-  withdwarAmountValue: any;
+  addAmountValue: any = '';
+  withdwarAmountValue: any = '';
   paystackReference: any;
   currency: any;
   addAmountBtn: boolean = false;
@@ -86,6 +86,8 @@ export class WalletComponent implements OnInit {
       this.objService.showErrorToast("Enter a valid amount", '');
       return
     }
+    this.objService.showSuccessToast('Request send to admin', '')
+    this.withdwarAmountValue = '';
   }
 
   paymentInit() {
