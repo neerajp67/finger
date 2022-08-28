@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <h1 class="heading-main">Today Event</h1>
+    <h1 class="heading-main">Current Event</h1>
     <h2 class="heading-sub" *ngIf="myEvents.length!=0">
         <img src="../../../assets/icons/heartIcon.png" alt="coin">
         {{myEvents[0].entry}} to join event
@@ -40,7 +40,7 @@
                 </div>
                 <div class="event-entry">
                     <div class="join-btn" (click)="joinMainEvent(event.id)">
-                        <p>Join Event</p>
+                        <p>Enter Event</p>
                     </div>
                     <div class="join-timer-main">
                         <div class="time-container">
@@ -103,12 +103,16 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <h2 class="heading-sub">
+                    <h2 class="heading-sub" [ngStyle]="{'visibility': event.entry == 0 ? 'hidden' : 'visible' }">
                         <img src="../../../assets/icons/heartIcon.png" alt="life">
                         {{event.entry}} to join event
                     </h2>
-                    <div class="join-btn-uncoming" (click)="joinUpcomingEvent(event.id)">
+                    <div class="join-btn-uncoming" *ngIf="!event.joined"
+                    (click)="joinUpcomingEvent(event.id)">
                         <p>Join Event</p>
+                    </div>
+                    <div class="joined-btn-uncoming"  *ngIf="event.joined">
+                        <p>Joined</p>
                     </div>
                 </div>
             </div>
@@ -116,7 +120,7 @@
     </div>
 </div>
 
-<div class="popup-container" *ngIf="lifePopup">
+<div class="popup-container" *ngIf="reminderPopup">
     <div class="event-reminder-popup">
         <div class="popup-header">
             <img src="../../../assets/icons/clockIcon.png" alt="clock">
@@ -126,33 +130,32 @@
             <div class="popup-timer">
                 <div class="popup-time-container">
                     <div class="popup-time">
-                        <p class="time">0</p>
+                        <p class="time">{{eventStartTime[0].m1}}</p>
                     </div>
 
                     <div class="popup-time">
-                        <p class="time">4</p>
+                        <p class="time">{{eventStartTime[0].m2}}</p>
                     </div>
                     <p class="time-separator">:</p>
                     <div class="popup-time">
-                        <p class="time">5</p>
+                        <p class="time">{{eventStartTime[0].s1}}</p>
                     </div>
                     <div class="popup-time">
-                        <p class="time">6</p>
+                        <p class="time">{{eventStartTime[0].s2}}</p>
                     </div>
                 </div>
                 <div class="timer-text-container">
                     <p>Minutes</p>
                     <p>Second</p>
                 </div>
-                <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: center;"
+                (click)="joinEvent(myEvents[0].id)">
                     <div class="join-btn" style="margin-top: 10px;">
                         <p>Join Event</p>
                     </div>
                 </div>
-
+                
             </div>
-
-
         </div>
     </div>
 </div>

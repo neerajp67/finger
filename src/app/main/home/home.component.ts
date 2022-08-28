@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   lifeFixedPrice: any;
   interval1: any;
 
+  reminderPopup: boolean = false;
+
   // messages: any[] = [];
   subscription!: Subscription;
  
@@ -82,7 +84,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       this.getEvents();
     }
     if (this.myEvents.length == 0) {
-      this.getMyEvents();
+      this.getEvents();
     } else {
       for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
         var startAtTime = new Date(this.myEvents[i].enter_at).getTime();
@@ -144,14 +146,22 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   getEvents() {
     this.objService.getEvents().subscribe((data: any) => {
       console.log(data);
-      this.upcomingEventArray = data;
-      this.prefService.upcomingEventData = data;
+      this.upcomingEventArray = data.upcoming_event;
+      this.myEvents = data.current_event;
+       if (this.myEvents.length > 0) {
+        for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
+          var startAtTime = new Date(this.myEvents[i].enter_at).getTime();
+          this.eventCounter(startAtTime, this.myEvents.length);
+        }
+      }
+      this.prefService.upcomingEventData = data.upcoming_event;
+      this.prefService.myEventdata = data.current_event;
     },
       (error: any) => {
         console.log(error);
       })
   }
-  joinMainEvent(id: any) {
+  joinMainEvent(gameId: any) {
     // var user = this.prefService.checkName('user')
     var user = localStorage.getItem('user');
     var currnenyUser;
@@ -159,11 +169,12 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     if (user != null) {
       currnenyUser = JSON.parse(user);
     }
-    this.objService.joinEvent({ game_event_id: id, user_id: currnenyUser.id }).subscribe((data: any) => {
+    this.objService.joinEvent({ game_event_id: gameId, user_id: currnenyUser.id }).subscribe((data: any) => {
       console.log(data);
       this.route.navigate(['game'], { queryParams: { data: data.game_event_id } });
     },
       (error: any) => {
+        this.reminderPopup = false;
         console.log(error);
       })
   }
@@ -175,10 +186,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     }
     this.objService.joinEvent({ game_event_id: id, user_id: currnenyUser.id }).subscribe((data: any) => {
       console.log(data);
-      this.getMyEvents();
+      this.objService.showSuccessToast('Event joined successfuly', '');
+      // this.getMyEvents();
+      this.getEvents();
+      this.getUserDetail();
     },
       (error: any) => {
         console.log(error);
+        this.objService.showErrorToast(error.error.message, '');
       })
   }
   navigate(component: any) {
@@ -226,21 +241,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       console.log("life credit")
       this.objService.updateLifepopupStatus(false);
       this.objService.showSuccessToast(data.message, '');
+      this.life1 = 0;
+      this.life2 = 1;
+      this.lifeBuyCount = 1;
       this.getUserDetail();
     },
       (error: any) => {
         console.log(error);
       })
-  }
-  logout() {
-    // this.objService.logout().subscribe((data: any) => {
-    //   console.log(data);
-    // this.objService.signOut();
-    // this.transformDate(data.start_at);
-    // },
-    //   (error: any) => {
-    //     console.log(error);
-    //   })
   }
 
   eventCounter(startAtTime: any, length: number) {
@@ -261,6 +269,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         timer = { h1, h2, m1, m2, s1, s2 };
         this.eventStartTime.unshift(timer);
         this.eventStartTime.length = length;
+        this.reminderPopup = false;
         // clearInterval(this.interval1);
       } else {
         h1 = timeDifference[0]
@@ -271,6 +280,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         s2 = timeDifference[7]
         var timer = { h1, h2, m1, m2, s1, s2 };
         this.eventStartTime.unshift(timer);
+        if( timeDifference[0] == '0' && timeDifference[1] == '0'){
+          if(timeDifference[3] == '0' && parseInt(timeDifference[4]) <= 4){
+            this.reminderPopup = true;
+          }
+        }
         this.eventStartTime.length = length;
       }
     }, 1000);
@@ -296,5 +310,9 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       (error: any) => {
         console.log(error);
       })
+  }
+  joinEvent(gameId: any){
+    this.joinMainEvent(gameId);
+    this.reminderPopup = false;
   }
 }

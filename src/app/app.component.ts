@@ -26,7 +26,8 @@ export class AppComponent {
   lifePopup: boolean = false;
   versionUpdateRequired: boolean = false;
   appUpdateLink: any;
-
+  iframVisibility!: Subscription;
+  iframe: boolean = false;
   loaderoptions: AnimationOptions = {
     path: '../assets/loaderAnim.json',
   };
@@ -52,11 +53,18 @@ export class AppComponent {
         this.loader = false;
       }
     });
-     this.subscriptionHomeLoader = this.objService.getHomeLoaderStatus().subscribe((value: any) => {
+    this.subscriptionHomeLoader = this.objService.getHomeLoaderStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.homeLoader = true;
       } else {
         this.homeLoader = false;
+      }
+    });
+    this.iframVisibility = this.objService.getiframVisibility().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.iframe = true;
+      } else {
+        this.iframe = false;
       }
     });
   }
@@ -77,15 +85,20 @@ export class AppComponent {
           CapacitorApp.exitApp();
           this.prefService.myEventdata = [];
           this.prefService.upcomingEventData = [];
+        } else if (window.location.href == 'http://localhost:4200/') {
+          CapacitorApp.exitApp();
         }
         // else if (window.location.href == 'http://localhost:4200/null') {
         //   this.route.navigate(['home']);
         //   // window.location.href
         //   // this.objService.showToast("backbutton");
         // }
-        else {
+        else if (this.iframe) {
+          this.objService.updateiframVisibility(false);
           window.history.back();
+          return;
         }
+        window.history.back();
       }
     });
     this.localNotification.registerLocalNotifications();
@@ -97,7 +110,7 @@ export class AppComponent {
     this.objService.getSetting().subscribe((data: any) => {
       console.log(data);
       CapacitorApp.getInfo().then((value: any) => {
-        if(value.version != data.app_version){
+        if (value.version != data.app_version) {
           this.appUpdateLink = value.app_store_link;
           this.versionUpdateRequired = true;
         }
@@ -117,8 +130,8 @@ export class AppComponent {
       })
   }
 
-  updateApp(){
-    window.open(this.appUpdateLink,'_newtab');
+  updateApp() {
+    window.open(this.appUpdateLink, '_newtab');
   }
 
   animationCreated(animationItem: AnimationItem): void {

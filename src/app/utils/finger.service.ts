@@ -17,7 +17,6 @@ export class FingerService {
   private upcomingEvents = new Subject<any>();
   baseUrl = environment.baseUrl;
 
-
   constructor(private httpClient: HttpClient,
     private toastr: ToastrService,
   ) { }
@@ -140,8 +139,8 @@ export class FingerService {
   showErrorToast(errorMessage: any, errorTitle: any) {
     this.toastr.error(errorMessage, errorTitle);
   }
-  winEvent() {
-    return this.httpClient.get(this.baseUrl + '/game-events/win-event');
+  winEvent(obj: any) {
+    return this.httpClient.get(this.baseUrl + '/game-events/win-event', obj);
   }
 }
 

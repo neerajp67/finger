@@ -17,6 +17,9 @@ export class HeadersInterceptor implements HttpInterceptor {
   loader: boolean = false;
   subscriptionLoader!: Subscription;
 
+  noLoaderApi = ['http://phplaravel-596529-2814684.cloudwaysapps.com/api/game-events/enter-event', 
+  'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting']
+
   constructor(private prefService: PrefrenceService, 
     private objService: FingerService) {
     this.subscriptionLoader = this.objService.getLoaderStatus().subscribe((value: any) => {
@@ -32,7 +35,14 @@ export class HeadersInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    this.objService.updateLoaderStatus(true);
+    // if(request.url != 'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting'){
+    //   this.objService.updateLoaderStatus(true);
+    // }
+    if(this.noLoaderApi.includes(request.url)){
+      this.objService.updateLoaderStatus(false);
+    } else{
+      this.objService.updateLoaderStatus(true);
+    }
     // console.log(this.prefService.getStorage('authToken'));
     var authToken = localStorage.getItem('authToken');
     request = request.clone({

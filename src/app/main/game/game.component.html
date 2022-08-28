@@ -4,14 +4,15 @@
             <div class="col-5">
                 <div class="user-count-container">
                     <img src="../../../assets/icons/participantIcon.png" alt="coins">
-                    <p>{{participants}}</p>
+                    <p *ngIf="gameTimer">{{participantsCount}}</p>
+                    <p *ngIf="!gameTimer">{{joinedParticipantCount}}</p>
                 </div>
             </div>
             <!-- <div class="col-1"></div> -->
             <div class="col-3">
                 <div class="life-container">
                     <img src="../../../assets/icons/heartIcon.png" alt="lifes">
-                    <p>{{lifes}}</p>
+                    <p>{{lifesCount}}</p>
                 </div>
             </div>
             <!-- <div class="col-1"></div> -->
@@ -23,14 +24,21 @@
             </div>
         </div>
     </div>
-
-    <div class="timmer-after" *ngIf="gameAboutToStart">
-        <p>Time remaining to place finger</p>
+    <div class="timmer-after" *ngIf="gameNotStartedText">
+        <p>Game is not started yet</p>
+    </div>
+     <div class="timmer-after" *ngIf="gameLost">
+        <p>You were eliminated</p>
+    </div>
+    
+    <div class="timmer-after" *ngIf="placeFingerTimer">
+        <!-- <p *ngIf="!gameTimer && !gameAboutToStart">Entry of event starts in</p>
+        <p *ngIf="gameTimer && gameAboutToStart">Time remaining to place finger</p> -->
+        <p>{{gameTimerHeading}}</p>
         <div class="time-container">
             <div class="timer">
                 <p class="time">{{m1}}</p>
             </div>
-
             <div class="timer">
                 <p class="time">{{m2}}</p>
             </div>
@@ -47,15 +55,9 @@
             <p>Second</p>
         </div>
     </div>
-    <div class="timmer-after" *ngIf="gameNotStarted">
-        <p>Game is not started yet</p>
-    </div>
-     <div class="timmer-after" *ngIf="gameLost">
-        <p>You were eliminated</p>
-    </div>
-    
+  
 
-    <div class="timmer-after" *ngIf="gameStarted">
+    <div class="timmer-after" *ngIf="gameTimer">
         <p>Time Elapsed</p>
         <div class="time-after-container">
             <div class="timer-after">
@@ -86,15 +88,15 @@
         </div>
         
     </div>
-    <div class="addvertise">
-        <!-- <iframe width="100%" height="180" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe> -->
-
-        <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise">
+    <div class="addvertise" *ngIf="iframVisibility">
+        <iframe width="100%" height="160px"
+        [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe> 
+        <!-- <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise"> -->
     </div>
     <div class="game-pad-container">
         <div class="game-pad" #gamePad id="gamePad">
             <ng-lottie *ngIf="enableAnimation"
-            [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie>
+            [options]="followFingerOption" (animationCreated)="animationCreated($event)"></ng-lottie>
             <ng-lottie *ngIf="lifeUsed"
             [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)"></ng-lottie>
         </div>
@@ -136,7 +138,7 @@
     </div>
 </div>
 
-<div class="popup-container" *ngIf="gameWon" >
+<div class="popup-container" *ngIf="gameWonPopUp" >
     <div class="game-complete-popup">
         <div class="popup-header" style="margin-bottom: 40px;">
             <img src="../../../assets/icons/winImg.png" alt="clock">

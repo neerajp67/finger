@@ -45,8 +45,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   navigateToLogin() {
-    console.log("back button clicked");
-    this.route.navigate(['']);
+    this.route.navigate(['login']);
   }
 
   openPrivacyPolicy() {
@@ -91,7 +90,7 @@ export class RegistrationComponent implements OnInit {
       password_confirmation: form.value.password_confirm, firebase_id: form.value.password, device_id: '1234', device_type: 'android', device_token: '1234'
     }).subscribe((data: any) => {
       console.log(data);
-      // localStorage.setItem('authToken', data.token);
+      localStorage.setItem('authToken', data.token);
       this.prefService.setName('authToken', data.token);
       this.objService.showSuccessToast("Registered Successfully", '');
       this.route.navigate(['home']);

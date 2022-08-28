@@ -82,10 +82,13 @@ export class WalletComponent implements OnInit {
   }
 
   withdrawAmount() {
-    if (this.withdwarAmountValue == "") {
+    if (this.withdwarAmountValue == "" || this.withdwarAmountValue > this.walletBalance) {
       this.objService.showErrorToast("Enter a valid amount", '');
       return
     }
+    // if(this.withdwarAmountValue > this.walletBalance){
+    //   this.objService.showErrorToast("Enter a valid amount", '');
+    // }
     this.objService.showSuccessToast('Request send to admin', '')
     this.withdwarAmountValue = '';
   }

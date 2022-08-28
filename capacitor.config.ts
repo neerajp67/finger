@@ -5,6 +5,7 @@ const config: CapacitorConfig = {
   appName: 'finger-game',
   webDir: 'dist/finger-game',
   bundledWebRuntime: false,
+  backgroundColor: '#080728',
   android: {
     allowMixedContent: true
   },

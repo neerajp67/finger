@@ -97,7 +97,8 @@
 }
 .transaction-container > .rowSub{
     overflow-y: scroll;
-    height: 200px;
+    overflow-x: hidden;
+    max-height: 200px;
 }
 .transaction-container > .rowSub::-webkit-scrollbar{
     display: none;
