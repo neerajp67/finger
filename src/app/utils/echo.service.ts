@@ -48,7 +48,17 @@ participants: any = 0;
     try {
       this.echo.private(`Game.User.` + userId).notification((valv: any) => {
         var arrSuccess = ['EVENT_ENTER', 'EVENT_WIN', 'EVENT_START', 'EVENT_JOIN'];
-        // var arrError= ['EVENT_LOSS', 'EVENT_LOSS', 'EVENT_DISQ'];
+        // var gameStatus= ['EVENT_WIN', 'EVENT_LOSS'];
+        console.log(valv);
+        console.log(valv.title, valv.message);
+        if(valv.key == 'EVENT_WIN'){
+          this.objService.updateWinStatus(true);
+          return
+        }
+        if(valv.key == 'EVENT_LOSS'){
+          this.objService.updateLostStatus(true);
+          return
+        }
         if(arrSuccess.includes(valv.key)){
           this.localNotification.sendLocal(valv.title, valv.message, 1)
           // this.objService.showSuccessToast(valv.message, valv.title)
@@ -56,25 +66,10 @@ participants: any = 0;
           this.localNotification.sendLocal(valv.title, valv.message, 2)
           // this.objService.showErrorToast(valv.message, valv.title)
         }
-        console.log(valv);
-        console.log(valv.title, valv.message);
-        // notification.value = valv
       });
     } catch (err) {
       console.log(err);
     }
-
-    // this.joinEcho();
-
-    // echo.channel('App.Models.User.' + userId).listen(
-    //   'notifications', (notifications: any) => {
-    //     console.log("notification");
-    //     console.log(notifications);
-    //     console.log(notifications.title, notifications.message);
-    //     // if (notifications) {
-    //     //   // store2.getUserStatus();
-    //     // }
-    //   });
   }
   joinEcho(gameId: any) {
     this.echo.join('Event.' + gameId).here((participants: any) =>

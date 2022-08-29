@@ -464,3 +464,13 @@
     margin-top: 10px; */
     /* float: right; */
 }
+
+.followObj{
+    width: 28px;
+    height: 28px;
+    background-color: red;
+    border-radius: 50%;
+    /* left: 90%;
+    top: 90%; */
+    position: absolute;
+}

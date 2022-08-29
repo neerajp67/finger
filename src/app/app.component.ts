@@ -21,9 +21,11 @@ export class AppComponent {
   loader: boolean = false;
   homeLoader: boolean = false;
   subscriptionLifePopup!: Subscription;
+  subscriptionReminderPopup!: Subscription;
   subscriptionLoader!: Subscription;
   subscriptionHomeLoader!: Subscription;
   lifePopup: boolean = false;
+  reminderPopup: boolean = false;
   versionUpdateRequired: boolean = false;
   appUpdateLink: any;
   iframVisibility!: Subscription;
@@ -44,6 +46,13 @@ export class AppComponent {
         this.lifePopup = true;
       } else {
         this.lifePopup = false;
+      }
+    });
+    this.subscriptionReminderPopup = this.objService.getReminderPopupStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.reminderPopup = true;
+      } else {
+        this.reminderPopup = false;
       }
     });
     this.subscriptionLoader = this.objService.getLoaderStatus().subscribe((value: any) => {
@@ -80,6 +89,10 @@ export class AppComponent {
         if (window.location.href == 'http://localhost:4200/home') {
           if (this.lifePopup) {
             this.objService.updateLifepopupStatus(false);
+            return;
+          }
+          if (this.reminderPopup) {
+            this.objService.updateReminderpopupStatus(true);
             return;
           }
           CapacitorApp.exitApp();

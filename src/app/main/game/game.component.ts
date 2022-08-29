@@ -19,12 +19,14 @@ export class GameComponent implements OnInit {
   //new variables: 
 
   // for game pad events
-  allowTouchStart: boolean = false;
-  allowTouchMove: boolean = false;
-  allowTouchEnd: boolean = false;
+  // allowTouchStart: boolean = false;
+  // allowTouchMove: boolean = false;
+  // allowTouchEnd: boolean = false;
 
   touchLocationX: any = 0;
-  touchLocationy: any = 0;
+  touchLocationY: any = 0;
+  touchLocationMoveX: any = 1;
+  touchLocationMoveY: any = 1;
   touchMovementInterval: any;
   gameToast: boolean = true;
   touchMoveCheck: boolean = false;
@@ -61,6 +63,7 @@ export class GameComponent implements OnInit {
   currency: any;
 
   element!: HTMLElement;
+  followFingerAnim!: HTMLElement;
 
   h1: any; h2: any; m1: any; m2: any; s1: any; s2: any;
   Ah1: any; Ah2: any; Am1: any; Am2: any; As1: any; As2: any;
@@ -69,9 +72,12 @@ export class GameComponent implements OnInit {
   iframVisibility: boolean = false;
   subscription!: Subscription;
 
-
+  wonSubscription!: Subscription;
+  lostSubscription!: Subscription;
+  placeFinger: boolean = false;
   enableAnimation: boolean = false;
-  options: AnimationOptions = {
+
+  placeFingerOption: AnimationOptions = {
     path: '../../assets/inGameAnimation.json',
   };
   followFingerOption: AnimationOptions = {
@@ -81,8 +87,26 @@ export class GameComponent implements OnInit {
     path: '../../assets/lifeUsedAnimation.json',
   };
 
+  css = window.document.styleSheets[0];
+
+
   constructor(private objService: FingerService, private route: ActivatedRoute,
-    private router: Router, private echoService: EchoService) { }
+    private router: Router, private echoService: EchoService) {
+    this.css.insertRule(
+      `@keyframes followFingerAnim {
+          0%   {left:30%; top:40%;}
+          10%   {left:60%; top:30%;}
+          20%   {left:90%; top:50%;}
+          30%   {left:50%; top:60%;}
+          40%   {left:40%; top:20%;}
+          50%  {left:20%; top:60%}
+          60%  {left:80%; top:20%;}
+          70%  {left:60%; top:70%;}
+          80%  {left:30%; top:80%;}
+          90%  {left:70%; top:60%;}
+          100% {left:30%; top:40%;}
+        }`, this.css.cssRules.length)
+  }
 
   ngOnInit(): void {
     var paystackData = localStorage.getItem('paystack');
@@ -112,11 +136,25 @@ export class GameComponent implements OnInit {
         this.iframVisibility = false;
       }
     });
-
+    this.wonSubscription = this.objService.getWinStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.gameWon = true;
+      } else {
+        this.gameWon = false;
+      }
+    });
+    this.lostSubscription = this.objService.getLostStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.gameLost = true;
+      } else {
+        this.gameLost = false;
+      }
+    });
   }
   ngAfterViewInit() {
-
     this.element = document.getElementById('gamePad') as HTMLElement;
+    this.followFingerAnim = document.getElementById('followFinger') as HTMLElement;
+    // this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
     this.touchEventListner();
 
   }
@@ -146,8 +184,8 @@ export class GameComponent implements OnInit {
         this.videoUrl = data.url;
         this.objService.updateiframVisibility(true);
       } else {
-        this.videoUrl = 'https://www.youtube.com/embed/sfoA1G0kBg4'
         this.objService.updateiframVisibility(true);
+        this.videoUrl = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1'
       }
       this.eventCounter(enterAtTime, startAtTime, endAtTime);
     },
@@ -169,13 +207,15 @@ export class GameComponent implements OnInit {
   joinEvent() {
     this.objService.joinEvent({ game_event_id: this.gameId, user_id: this.userId }).subscribe((data: any) => {
       console.log(data);
-      if ((data.eliminated_at != null || data.disqualify_at != null) || data.life_use >= 3) {
+      if ((data.eliminated_at != null || data.disqualify_at != null) || data.life_use > 3) {
         this.gameLostText = true;
         this.gameNotStartedText = false;
         this.placeFingerTimer = false;
 
-        this.gameLost = true;
+        // this.gameLost = true;
+        this.objService.updateLostStatus(true);
         this.gameWon = false;
+        this.gameWonPopUp = false;
         this.gameAboutToStart = false;
         this.gameStarted = false;
         this.gameNotStarted = false;
@@ -204,10 +244,9 @@ export class GameComponent implements OnInit {
     console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     this.element.addEventListener("touchstart", e => {
-      // this.allowTouchStart = false;
-      // this.allowTouchMove = false;
-      // this.allowTouchEnd = false;
-      console.log(e);
+      e.preventDefault();
+      console.log('start');
+      // this.checkUserMovement();
       if (this.gameLost) {
         if (this.gameToast) {
           this.objService.showErrorToast('You lost the game', '');
@@ -224,59 +263,56 @@ export class GameComponent implements OnInit {
         }
         return;
       }
-      if ((this.gameStarted && !this.lifeUsed) && (!this.gameLost && !this.gameWon)) {
+      if (this.gameWon) {
+        if (this.gameToast) {
+          this.objService.showErrorToast('You Won the Game', '');
+          this.gameToast = false;
+          this.setToastTimmer();
+        }
+        return;
+      }
+
+      if (this.gameStarted && !this.lifeUsed) {
         this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
           this.participantsCount = participants.length)
           .joining((participants: any) => this.participantsCount++)
           .leaving((participants: any) => this.participantsCount--);
-        this.setTouchMoveTimmer();
         this.enterEvent(0);
+        this.placeFinger = false;
+        this.checkUserMovement();
         this.enableAnimation = true;
-        return
-      }
-      if(this.lifeUsed){
+        this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
+      } else if (this.lifeUsed) {
+        this.checkUserMovement();
         this.lifeUsed = false;
         this.enableAnimation = true;
+        this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
       }
-      
-
-      // if (!this.lifeUsed && (!this.gameLost && !this.gameWon)) {
-      //   this.enterEvent(0);
-      // } else {
-      //   this.lifeUsed = false;
-      // }
-    })
+    }),
     this.element.addEventListener("touchmove", e => {
+      e.preventDefault();
+      console.log('move')
+      this.touchLocationMoveX = e.changedTouches[0].screenX;
+      this.touchLocationMoveY = e.changedTouches[0].screenY;
       if (!this.gameStarted) {
         return;
       }
-      // if(this.gameLost){
-      //   return;
-      // }
-      // if(this.gameWon){
-      //   return;
-      // }
       if (this.gameLost || this.gameWon) {
-        clearInterval(this.touchMovementInterval);
+        // clearInterval(this.touchMovementInterval);
         return;
       }
 
-      //todo check for interval
-      if (this.touchMoveCheck) {
-        this.touchMoveCheck = false;
-        this.checkUserMovement(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
-      }
-
-    })
+    }),
     this.element.addEventListener("touchend", e => {
+      e.preventDefault();
       console.log("end");
       this.enableAnimation = false;
-      clearInterval(this.touchMovementInterval);
+      // clearInterval(this.touchMovementInterval);
       if (!this.gameStarted || (this.gameWon || this.gameLost)) {
         return;
       }
       // this.echoService.echo.leave('Event.11');
-      if ((this.lifesCount >= 1 && this.lifeUsedCount <= 2)) {
+      if (this.lifesCount >= 1 && this.lifeUsedCount < 4) {
         //  this.enterEvent();
         // if ((!this.gameWon && !this.gameLost) && this.participantsCount >= 1) {
         this.lifePopup = true;
@@ -285,7 +321,7 @@ export class GameComponent implements OnInit {
       } else {
         this.enterEvent(0);
       }
-    })
+    });
   }
   timeLeft: number = 5;
   setTimmer() {
@@ -301,29 +337,40 @@ export class GameComponent implements OnInit {
       }
     }, 1000)
   }
-  checkUserMovement(x: any, y: any) {
-    //todo can implement movement logic here
-    if (this.touchLocationX != x && this.touchLocationy != y) {
-      this.touchLocationX = x;
-      this.touchLocationy = y;
-      this.touchMoveCheck = false;
-      this.setTouchMoveTimmer();
-    } else {
-      if (!this.gameLost && !this.gameWon)
-        this.enterEvent(0);
-    }
+  checkUserMovement() {
+    var touchMoveTimer = setTimeout(() => {
+      if (this.touchLocationX != this.touchLocationMoveX || this.touchLocationY != this.touchLocationMoveY) {
+        console.log('touch tracker');
+        console.log(this.touchLocationX + ' ' + this.touchLocationY)
+        console.log(this.touchLocationMoveX + ' ' + this.touchLocationMoveY)
+        this.touchLocationX = this.touchLocationMoveX;
+        this.touchLocationY = this.touchLocationMoveY;
+        this.checkUserMovement();
+      }
+      else {
+        console.log("same")
+        if (!this.gameLost && !this.gameWon) {
+          if (this.lifesCount >= 1 && this.lifeUsedCount < 4) {
+            this.lifePopup = true;
+            this.setTimmer();
+            clearTimeout(touchMoveTimer);
+          }
+          else {
+            clearTimeout(touchMoveTimer);
+            this.enterEvent(0);
+          }
+        }
+      }
+    }, 5000);
   }
   enterEvent(life: any) {
     this.objService.enterEvent({ game_event_id: this.gameId, life: life }).subscribe((data: any) => {
       console.log(data);
       var currentTime = new Date().getTime();
-      // if (data.disqualify_at != null || data.eliminated_at != null) {
-      //   this.echo.leaveChannel('App.Models.User.1');
-
-      // }
-      if (data.disqualify_at != null || data.eliminated_at != null) {
+      if (data.disqualify_at != null) {
         //loss
-        this.gameLost = true
+        // this.gameLost = true
+        this.objService.updateLostStatus(true);
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = true;
@@ -331,29 +378,33 @@ export class GameComponent implements OnInit {
         return;
       }
       if (data.eliminated_at != null) {
-        this.gameLost = true
+        // this.gameLost = true
+        this.objService.updateLostStatus(true);
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = true;
+        // this.echoService.echo.leaveChannel('Event.' + this.gameId);
         return;
       }
       if (data.life_use >= 3) {
         //loss
-        this.gameLost = true
+        // this.gameLost = true
+        this.objService.updateLostStatus(true);
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = true;
+        this.echoService.echo.leaveChannel('Event.' + this.gameId);
         return;
       }
       if (data.win_at != null) {
         //win
-        // this.lifePopup = false;
-        this.gameWon = true;
+        this.lifePopup = false;
+        // this.gameWon = true;
+        this.objService.updateWinStatus(true);
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = false;
         this.gameWonPopUp = true;
-        //call win api
         this.winEvent();
         return;
       }
@@ -367,10 +418,12 @@ export class GameComponent implements OnInit {
       this.lifePopup = false;
       this.enterEvent(0);
     } else {
+      this.lifeUsed = true;
+      this.enableAnimation = false;
       this.enterEvent(1);
       this.lifesCount--;
+      this.lifeUsedCount++;
       this.lifePopup = false;
-      this.lifeUsed = true;
       var timeLeftLifeUsed: number = 6;
       var interval = setInterval(() => {
         if (timeLeftLifeUsed > 0) {
@@ -386,13 +439,6 @@ export class GameComponent implements OnInit {
       // this.enterEvent();
     }
   }
-  // mousedown() {
-  //   let element: HTMLElement = document.getElementById('gamePad') as HTMLElement;
-  //   var rect = element.getBoundingClientRect();
-
-  //   console.log(rect.top, rect.right, rect.bottom, rect.left);
-  //   console.log("mouse down")
-  // }
   private getNowUTC() {
     const now = new Date();
     const time = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
@@ -406,7 +452,6 @@ export class GameComponent implements OnInit {
       var diffMilliseconds = enterAt - currentTime;
       var diffSeconds = diffMilliseconds / 1000;
       var timeDifference = this.secondsToHMS(diffSeconds);
-      // var h1, h2, m1, m2, s1, s2;
       if (timeDifference[0] != '-') {
         // this.placeFingerTimer = false;
         // this.gameNotStartedText = true;
@@ -465,86 +510,86 @@ export class GameComponent implements OnInit {
             // this.gameNotStartedText = false;
             // this.gameLostText = false;
             this.gameTimer = false;
-
             this.gameStarted = true;
             // this.gameAboutToStart = false;
             this.gameNotStarted = false;
+            this.placeFinger = true;
+          } else if ((timeDifference[0] == '0' && timeDifference[1] == '0') &&
+            (timeDifference[3] == '0' && parseInt(timeDifference[4]) == 0)) {
+            this.placeFingerTimer = true;
+            this.gameTimer = false;
+            this.gameStarted = true;
+            this.gameNotStarted = false;
+            if (!this.enableAnimation) {
+              this.placeFinger = true;
+            } else {
+              this.placeFinger = false;
+            }
           }
         } else {
-          var diffMilliseconds = endAt - currentTime;
+          //new timer
+          var diffMilliseconds = currentTime - startAt;
           var diffSeconds = diffMilliseconds / 1000;
           var timeDifference = this.secondsToHMS(diffSeconds);
-          if (timeDifference[0] != '-') {
-            this.placeFingerTimer = false;
-            // this.gameNotStartedText = false;
-            // this.gameLostText = false;
-            this.gameTimer = true;
-
-            // if (this.participants == 1 && (!this.gameLost || !this.gameWon)) {
-            //   clearInterval(interval);
-            //   this.gameAboutToStart = false;
-            //   this.gameStarted = false;
-            //   this.gameNotStarted = false;
-            //   this.gameWon = true;
-            //   this.gameLost = false;
-            //   this.winEvent();
-            // }
-            this.gameAboutToStart = false;
-            if(this.gameLost || this.gameWon){
-              this.gameStarted = false;
-            } else {
-              this.gameStarted = true;
-            }
+          this.Ah1 = timeDifference[0];
+          this.Ah2 = timeDifference[1];
+          this.Am1 = timeDifference[3];
+          this.Am2 = timeDifference[4];
+          this.As1 = timeDifference[6];
+          this.As2 = timeDifference[7];
+          this.placeFingerTimer = false;
+          this.placeFinger = false;
+          this.gameTimer = true;
+          this.gameAboutToStart = false;
+          if (this.gameWon) {
+            this.gameStarted = false;
+            this.enableAnimation = false;
             this.gameNotStarted = false;
-            this.Ah1 = timeDifference[0];
-            this.Ah2 = timeDifference[1];
-            this.Am1 = timeDifference[3];
-            this.Am2 = timeDifference[4];
-            this.As1 = timeDifference[6];
-            this.As2 = timeDifference[7];
-          } else {
             clearInterval(interval);
-            this.placeFingerTimer = false;
-            // this.gameNotStartedText = false;
-            // this.gameLostText = false;
-            this.gameTimer = false;
-            if (!this.gameLost || !this.gameWon) {
-              // this.enterEvent(0);
-              this.gameWon = true;
-              this.gameLost = false;
-              this.winEvent();
-            }
-            this.gameAboutToStart = false;
+            this.winEvent();
+          } else if (this.gameLost) {
+            this.enableAnimation = false;
             this.gameStarted = false;
             this.gameNotStarted = false;
+          } else {
+            this.gameStarted = true;
           }
+          // this.gameTimer = false;
+
+
+          // var diffMilliseconds = endAt - currentTime;
+          // var diffSeconds = diffMilliseconds / 1000;
+          // var timeDifference = this.secondsToHMS(diffSeconds);
+          // if (timeDifference[0] != '-') {
+
+
+          // if (this.participants == 1 && (!this.gameLost || !this.gameWon)) {
+          //   clearInterval(interval);
+          //   this.gameAboutToStart = false;
+          //   this.gameStarted = false;
+          //   this.gameNotStarted = false;
+          //   this.gameWon = true;
+          //   this.gameLost = false;
+          //   this.winEvent();
+          // }
+
+
+          // } 
+          // else {
+          //   clearInterval(interval);
+          //   this.placeFinger = false;
+          //   this.placeFingerTimer = false;
+          //   this.enableAnimation = false;
+          //   this.gameTimer = false;
+          //   if (!this.gameLost) {
+          //     this.winEvent();
+          //   }
+          //   this.gameAboutToStart = false;
+          //   this.gameStarted = false;
+          //   this.gameNotStarted = false;
+          // }
         }
       }
-      // else {
-      //   this.gameAboutToStart = false;
-      // }
-
-      // if (timeDifference[0] == '-') {
-      //   h1 = '0'
-      //   h2 = '0'
-      //   m1 = '0'
-      //   m2 = '0'
-      //   s1 = '0'
-      //   s2 = '0'
-      //   timer = { h1, h2, m1, m2, s1, s2 };
-      //   this.eventStartTime.unshift(timer);
-      //   this.eventStartTime.length = length;
-      // } else {
-      //   h1 = timeDifference[0]
-      //   h2 = timeDifference[1]
-      //   m1 = timeDifference[3]
-      //   m2 = timeDifference[4]
-      //   s1 = timeDifference[6]
-      //   s2 = timeDifference[7]
-      //   var timer = { h1, h2, m1, m2, s1, s2 };
-      //   this.eventStartTime.unshift(timer);
-      //   this.eventStartTime.length = length;
-      // }
     }, 1000);
   }
   secondsToHMS(diffSeconds: any) {
@@ -564,8 +609,11 @@ export class GameComponent implements OnInit {
   winEvent() {
     this.objService.winEvent({ game_event_id: this.gameId }).subscribe((data: any) => {
       console.log(data);
-      this.gameWon = true;
-      this.gameLost = false;
+      // this.gameWon = true;
+      this.objService.updateWinStatus(true);
+      this.gameWonPopUp = true;
+      // this.gameLost = false;
+      this.objService.updateLostStatus(false);
       this.gameAboutToStart = false;
       this.gameStarted = false;
       this.gameNotStarted = false;

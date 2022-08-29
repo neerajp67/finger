@@ -33,9 +33,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   interval1: any;
 
   reminderPopup: boolean = false;
+  reminderPopupCancle: boolean = false;
 
   // messages: any[] = [];
   subscription!: Subscription;
+  subscriptionReminderPopup!: Subscription;
  
 
   constructor(private route: Router, private objService: FingerService,
@@ -67,6 +69,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         this.lifePopup = true;
       } else {
         this.lifePopup = false;
+      }
+    });
+    this.subscriptionReminderPopup = this.objService.getReminderPopupStatus().subscribe((value: any) => {
+      if (Object.values(value)[0]) {
+        this.reminderPopupCancle = true;
+      } else {
+        this.reminderPopupCancle = false;
       }
     });
   }
@@ -176,6 +185,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       (error: any) => {
         this.reminderPopup = false;
         console.log(error);
+        this.objService.showErrorToast(error.error.message, '');
       })
   }
   joinUpcomingEvent(id: any) {
@@ -282,7 +292,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         this.eventStartTime.unshift(timer);
         if( timeDifference[0] == '0' && timeDifference[1] == '0'){
           if(timeDifference[3] == '0' && parseInt(timeDifference[4]) <= 4){
-            this.reminderPopup = true;
+            if(!this.reminderPopupCancle){
+              this.objService.updateReminderpopupStatus(true);
+              this.reminderPopup = true;
+            }
           }
         }
         this.eventStartTime.length = length;

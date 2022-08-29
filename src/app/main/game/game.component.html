@@ -27,10 +27,10 @@
     <div class="timmer-after" *ngIf="gameNotStartedText">
         <p>Game is not started yet</p>
     </div>
-     <div class="timmer-after" *ngIf="gameLost">
+    <div class="timmer-after" *ngIf="gameLost">
         <p>You were eliminated</p>
     </div>
-    
+
     <div class="timmer-after" *ngIf="placeFingerTimer">
         <!-- <p *ngIf="!gameTimer && !gameAboutToStart">Entry of event starts in</p>
         <p *ngIf="gameTimer && gameAboutToStart">Time remaining to place finger</p> -->
@@ -55,7 +55,7 @@
             <p>Second</p>
         </div>
     </div>
-  
+
 
     <div class="timmer-after" *ngIf="gameTimer">
         <p>Time Elapsed</p>
@@ -86,19 +86,23 @@
             <p>Minutes</p>
             <p>Second</p>
         </div>
-        
+
     </div>
     <div class="addvertise" *ngIf="iframVisibility">
-        <iframe width="100%" height="160px"
-        [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen></iframe> 
+        <iframe width="100%" height="160px" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen allow="autoplay"></iframe>
         <!-- <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise"> -->
     </div>
     <div class="game-pad-container">
         <div class="game-pad" #gamePad id="gamePad">
-            <ng-lottie *ngIf="enableAnimation"
-            [options]="followFingerOption" (animationCreated)="animationCreated($event)"></ng-lottie>
-            <ng-lottie *ngIf="lifeUsed"
-            [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)"></ng-lottie>
+            <ng-lottie *ngIf="((placeFinger && !enableAnimation) && (!lifeUsed && gameLost)) && !gameLost" [options]="placeFingerOption"
+                (animationCreated)="animationCreated($event)">
+            </ng-lottie>
+            <!-- <ng-lottie *ngIf="enableAnimation" [options]="followFingerOption"
+                (animationCreated)="animationCreated($event)"></ng-lottie> -->
+            <ng-lottie *ngIf="lifeUsed" [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)">
+            </ng-lottie>
+            <div class="followObj" id="followFinger" [ngStyle]="enableAnimation?{'opacity': '1'} : {'opacity': '0'}">
+            </div>
         </div>
     </div>
     <!-- <ng-lottie [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie> -->
@@ -138,7 +142,7 @@
     </div>
 </div>
 
-<div class="popup-container" *ngIf="gameWonPopUp" >
+<div class="popup-container" *ngIf="gameWonPopUp">
     <div class="game-complete-popup">
         <div class="popup-header" style="margin-bottom: 40px;">
             <img src="../../../assets/icons/winImg.png" alt="clock">

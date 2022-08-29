@@ -9,6 +9,7 @@ import { Observable, Subject } from 'rxjs';
 })
 export class FingerService {
   private lifepopupsubject = new Subject<any>();
+  private reminderpopupsubject = new Subject<any>();
   private loaderSubject = new Subject<any>();
   private homeLoader = new Subject<any>();
   private iframVisibility = new Subject<any>();
@@ -16,6 +17,9 @@ export class FingerService {
   private myEvents = new Subject<any>();
   private upcomingEvents = new Subject<any>();
   baseUrl = environment.baseUrl;
+
+  private gameWon = new Subject<any>();
+  private gameLost = new Subject<any>();
 
   constructor(private httpClient: HttpClient,
     private toastr: ToastrService,
@@ -40,6 +44,12 @@ export class FingerService {
   getLifePopupStatus(): Observable<any> {
     return this.lifepopupsubject.asObservable();
   }
+  updateReminderpopupStatus(value: boolean) {
+    this.reminderpopupsubject.next({ status: value });
+  }
+  getReminderPopupStatus(): Observable<any> {
+    return this.reminderpopupsubject.asObservable();
+  }
   updateLoaderStatus(value: boolean) {
     this.loaderSubject.next({ status: value });
   }
@@ -57,6 +67,19 @@ export class FingerService {
   }
   getiframVisibility(): Observable<any> {
     return this.iframVisibility.asObservable();
+  }
+
+  updateWinStatus(value: boolean) {
+    this.gameWon.next({ status: value });
+  }
+  getWinStatus(): Observable<any> {
+    return this.gameWon.asObservable();
+  }
+  updateLostStatus(value: boolean) {
+    this.gameLost.next({ status: value });
+  }
+  getLostStatus(): Observable<any> {
+    return this.gameLost.asObservable();
   }
 
   // signInWithGoogle(googleLoginOptions: any): void {
@@ -140,7 +163,7 @@ export class FingerService {
     this.toastr.error(errorMessage, errorTitle);
   }
   winEvent(obj: any) {
-    return this.httpClient.get(this.baseUrl + '/game-events/win-event', obj);
+    return this.httpClient.post(this.baseUrl + '/api/game-events/win-event', obj);
   }
 }
 
