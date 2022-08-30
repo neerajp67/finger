@@ -18,7 +18,6 @@
             <!-- <div class="col-1"></div> -->
             <div class="col-4">
                 <div class="balance-container">
-                    <!-- <img src="../../../assets/icons/settingIcon.png" alt="settings"> -->
                     <p>{{currency}} {{prizeMoney}}</p>
                 </div>
             </div>
@@ -32,8 +31,6 @@
     </div>
 
     <div class="timmer-after" *ngIf="placeFingerTimer">
-        <!-- <p *ngIf="!gameTimer && !gameAboutToStart">Entry of event starts in</p>
-        <p *ngIf="gameTimer && gameAboutToStart">Time remaining to place finger</p> -->
         <p>{{gameTimerHeading}}</p>
         <div class="time-container">
             <div class="timer">
@@ -92,15 +89,21 @@
         <iframe width="100%" height="160px" [src]="videoUrl | urlSenitize" frameborder="0" allowfullscreen allow="autoplay"></iframe>
         <!-- <img src="../../../assets/icons/dummyAddImg.png" alt="addvertise"> -->
     </div>
-    <div class="game-pad-container">
-        <div class="game-pad" #gamePad id="gamePad">
-            <ng-lottie *ngIf="((placeFinger && !enableAnimation) && (!lifeUsed && gameLost)) && !gameLost" [options]="placeFingerOption"
-                (animationCreated)="animationCreated($event)">
+    <div class="game-pad-container" (touchstart)="touchStartt($event)" 
+    (touchmove)="touchMovee($event)" (touchend)="touchEndd($event)">
+        <div class="game-pad" #gamePad id="gamePad" >
+            <ng-lottie class="animOverlap" [options]="placeFingerOption"
+            [ngStyle]="((placeFinger && !enableAnimation) && (!lifeUsed && !gameLost))?{'opacity': '1'} : {'opacity': '0'}" 
+            (animationCreated)="animationCreated($event)">
             </ng-lottie>
             <!-- <ng-lottie *ngIf="enableAnimation" [options]="followFingerOption"
                 (animationCreated)="animationCreated($event)"></ng-lottie> -->
-            <ng-lottie *ngIf="lifeUsed" [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)">
-            </ng-lottie>
+            <!-- <ng-lottie class="animOverlap" [ngStyle]="lifeUsed?{'opacity': '1'} : {'opacity': '0'}"
+             [options]="LifeUsedoptions" (animationCreated)="animationCreated($event)">
+            </ng-lottie> -->
+            <div class="lifeUse_counter" [ngStyle]="lifeUsed?{'opacity': '1'} : {'opacity': '0'}">
+                <p>{{lifeUserCounter}}</p> 
+            </div>
             <div class="followObj" id="followFinger" [ngStyle]="enableAnimation?{'opacity': '1'} : {'opacity': '0'}">
             </div>
         </div>
@@ -155,7 +158,7 @@
             <div class="popup-timer">
                 <div style="display: flex; justify-content: center;">
                     <div class="skip-btn" (click)="navigateToHome()">
-                        <p>Hone</p>
+                        <p>Home</p>
                     </div>
                 </div>
             </div>

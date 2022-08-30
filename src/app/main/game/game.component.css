@@ -474,3 +474,22 @@
     top: 90%; */
     position: absolute;
 }
+.animOverlap{
+    position: absolute;
+    height: 90%;
+    width: 90%;
+    margin: auto
+}
+.lifeUse_counter{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.lifeUse_counter > p{
+    color: rgb(46, 40, 40);
+    font-size: 128px;
+    font-weight: bold;
+    margin: auto;
+}

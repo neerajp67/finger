@@ -47,6 +47,7 @@ export class GameComponent implements OnInit {
   lifeUsedCount: number = 0;
   lifeUsed: boolean = false;
   lifePopup: boolean = false;
+  lifeUserCounter: any;
 
   //game status
   startatTime: any;
@@ -114,15 +115,12 @@ export class GameComponent implements OnInit {
       var data = JSON.parse(paystackData);
       this.currency = data.currency;
     }
-    // this.objService.updateiframVisibility(true);
     // this.participantsCount = this.echoService.participants;
     this.route.queryParams.subscribe(data =>
       this.gameId = Object.values(data)[0]
     );
     this.getEvent();
     this.getProfile();
-
-    //todo call joinEvent api
 
     // this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
     //   this.participants = participants.length)
@@ -154,8 +152,7 @@ export class GameComponent implements OnInit {
   ngAfterViewInit() {
     this.element = document.getElementById('gamePad') as HTMLElement;
     this.followFingerAnim = document.getElementById('followFinger') as HTMLElement;
-    // this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
-    this.touchEventListner();
+    // this.touchEventListner();
 
   }
   setToastTimmer() {
@@ -223,13 +220,14 @@ export class GameComponent implements OnInit {
       if (data.win_at != null) {
         //win
         // this.lifePopup = false;
-        this.gameWon = true;
+        // this.gameWon = true;
+        this.objService.updateWinStatus(true);
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = false;
         this.gameWonPopUp = true;
         //call win api
-        this.winEvent();
+        // this.winEvent();
         return;
       }
     },
@@ -238,100 +236,88 @@ export class GameComponent implements OnInit {
       })
   }
 
-  touchEventListner() {
-    var rect = this.element.getBoundingClientRect();
-    console.log("game pad coordinates")
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
+  // touchEventListner() {
+  //   var rect = this.element.getBoundingClientRect();
+  //   console.log("game pad coordinates")
+  //   console.log(rect.top, rect.right, rect.bottom, rect.left);
 
-    this.element.addEventListener("touchstart", e => {
-      e.preventDefault();
-      console.log('start');
-      // this.checkUserMovement();
-      if (this.gameLost) {
-        if (this.gameToast) {
-          this.objService.showErrorToast('You lost the game', '');
-          this.gameToast = false;
-          this.setToastTimmer();
-        }
-        return;
-      }
-      if (!this.gameStarted) {
-        if (this.gameToast) {
-          this.objService.showErrorToast('Game not started yet', '');
-          this.gameToast = false;
-          this.setToastTimmer();
-        }
-        return;
-      }
-      if (this.gameWon) {
-        if (this.gameToast) {
-          this.objService.showErrorToast('You Won the Game', '');
-          this.gameToast = false;
-          this.setToastTimmer();
-        }
-        return;
-      }
+  //   this.element.addEventListener("touchstart", e => {
+  //     const onTouchMove = () => {
+  //       console.log('onTouchMove');
+  //       this.touchLocationMoveX = e.changedTouches[0].screenX;
+  //       this.touchLocationMoveY = e.changedTouches[0].screenY;
+  //     }
+  //     const onTouchEnd = () => {
+  //       console.log('onToucEnd');
+  //       this.element.removeEventListener('touchmove', onTouchMove);
+  //       this.element.removeEventListener('touchend', onTouchEnd);
+  //       this.enableAnimation = false;
+  //       if (!this.gameStarted || (this.gameWon || this.gameLost)) {
+  //         return;
+  //       }
+  //       if (this.lifesCount >= 1 && this.lifeUsedCount < 4) {
+  //        if(!this.lifePopup){
+  //          this.lifePopup = true;
+  //          this.setTimmer();
+  //        }
+  //       } else {
+  //         this.enterEvent(0);
+  //       }
+  //     }
+  //     this.element.addEventListener('touchmove', onTouchMove);
+  //     this.element.addEventListener('touchend', onTouchEnd);
+  //     console.log('onTouchstart');
+  //     if (this.gameLost) {
+  //       if (this.gameToast) {
+  //         this.objService.showErrorToast('You lost the game', '');
+  //         this.gameToast = false;
+  //         this.setToastTimmer();
+  //       }
+  //       return;
+  //     }
+  //     if (!this.gameStarted) {
+  //       if (this.gameToast) {
+  //         this.objService.showErrorToast('Game not started yet', '');
+  //         this.gameToast = false;
+  //         this.setToastTimmer();
+  //       }
+  //       return;
+  //     }
+  //     if (this.gameWon) {
+  //       if (this.gameToast) {
+  //         this.objService.showErrorToast('You Won the Game', '');
+  //         this.gameToast = false;
+  //         this.setToastTimmer();
+  //       }
+  //       return;
+  //     }
 
-      if (this.gameStarted && !this.lifeUsed) {
-        this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
-          this.participantsCount = participants.length)
-          .joining((participants: any) => this.participantsCount++)
-          .leaving((participants: any) => this.participantsCount--);
-        this.enterEvent(0);
-        this.placeFinger = false;
-        this.checkUserMovement();
-        this.enableAnimation = true;
-        this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
-      } else if (this.lifeUsed) {
-        this.checkUserMovement();
-        this.lifeUsed = false;
-        this.enableAnimation = true;
-        this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
-      }
-    }),
-    this.element.addEventListener("touchmove", e => {
-      e.preventDefault();
-      console.log('move')
-      this.touchLocationMoveX = e.changedTouches[0].screenX;
-      this.touchLocationMoveY = e.changedTouches[0].screenY;
-      if (!this.gameStarted) {
-        return;
-      }
-      if (this.gameLost || this.gameWon) {
-        // clearInterval(this.touchMovementInterval);
-        return;
-      }
-
-    }),
-    this.element.addEventListener("touchend", e => {
-      e.preventDefault();
-      console.log("end");
-      this.enableAnimation = false;
-      // clearInterval(this.touchMovementInterval);
-      if (!this.gameStarted || (this.gameWon || this.gameLost)) {
-        return;
-      }
-      // this.echoService.echo.leave('Event.11');
-      if (this.lifesCount >= 1 && this.lifeUsedCount < 4) {
-        //  this.enterEvent();
-        // if ((!this.gameWon && !this.gameLost) && this.participantsCount >= 1) {
-        this.lifePopup = true;
-        this.setTimmer();
-        // }
-      } else {
-        this.enterEvent(0);
-      }
-    });
-  }
+  //     if (this.gameStarted && !this.lifeUsed) {
+  //       this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
+  //         this.participantsCount = participants.length)
+  //         .joining((participants: any) => this.participantsCount++)
+  //         .leaving((participants: any) => this.participantsCount--);
+  //       this.enterEvent(0);
+  //       this.placeFinger = false;
+  //       this.checkUserMovement();
+  //       this.enableAnimation = true;
+  //       this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
+  //     } else if (this.lifeUsed) {
+  //       this.checkUserMovement();
+  //       this.lifeUsed = false;
+  //       this.enableAnimation = true;
+  //       this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
+  //     }
+  //   })
+  // }
   timeLeft: number = 5;
   setTimmer() {
-    // var timeLeftinner: number = 5;
+    console.log("user tife timer")
     this.timeLeft = 5;
     var interval = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
-        // this.enterEvent(0);
         this.lifePopup = false;
         clearInterval(interval);
       }
@@ -340,32 +326,41 @@ export class GameComponent implements OnInit {
   checkUserMovement() {
     var touchMoveTimer = setTimeout(() => {
       if (this.touchLocationX != this.touchLocationMoveX || this.touchLocationY != this.touchLocationMoveY) {
-        console.log('touch tracker');
+        console.log('touch different');
         console.log(this.touchLocationX + ' ' + this.touchLocationY)
         console.log(this.touchLocationMoveX + ' ' + this.touchLocationMoveY)
         this.touchLocationX = this.touchLocationMoveX;
         this.touchLocationY = this.touchLocationMoveY;
+        if(this.gameWon){
+          clearTimeout(touchMoveTimer);
+          return;
+        }
         this.checkUserMovement();
       }
       else {
-        console.log("same")
+        console.log("touch same")
         if (!this.gameLost && !this.gameWon) {
-          if (this.lifesCount >= 1 && this.lifeUsedCount < 4) {
-            this.lifePopup = true;
-            this.setTimmer();
+          if (this.lifesCount >= 1 && this.lifeUsedCount <= 3) {
+            if(!this.lifePopup){
+              this.lifePopup = true;
+              this.setTimmer();
+            }
             clearTimeout(touchMoveTimer);
           }
           else {
             clearTimeout(touchMoveTimer);
-            this.enterEvent(0);
+            if(!this.gameWon){
+              this.enterEvent(0);
+            }
           }
         }
       }
-    }, 5000);
+    }, 2000);
   }
   enterEvent(life: any) {
     this.objService.enterEvent({ game_event_id: this.gameId, life: life }).subscribe((data: any) => {
       console.log(data);
+      console.log('enter Event')
       var currentTime = new Date().getTime();
       if (data.disqualify_at != null) {
         //loss
@@ -383,10 +378,10 @@ export class GameComponent implements OnInit {
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = true;
-        // this.echoService.echo.leaveChannel('Event.' + this.gameId);
+        this.echoService.echo.leaveChannel('Event.' + this.gameId);
         return;
       }
-      if (data.life_use >= 3) {
+      if (data.life_use > 4) {
         //loss
         // this.gameLost = true
         this.objService.updateLostStatus(true);
@@ -404,8 +399,7 @@ export class GameComponent implements OnInit {
         this.enableAnimation = false;
         this.gameNotStartedText = false;
         this.gameLostText = false;
-        this.gameWonPopUp = true;
-        this.winEvent();
+        // this.winEvent();
         return;
       }
     },
@@ -424,19 +418,20 @@ export class GameComponent implements OnInit {
       this.lifesCount--;
       this.lifeUsedCount++;
       this.lifePopup = false;
-      var timeLeftLifeUsed: number = 6;
+      var timeLeftLifeUsed: number = 5;
       var interval = setInterval(() => {
         if (timeLeftLifeUsed > 0) {
           timeLeftLifeUsed--;
+          this.lifeUserCounter = timeLeftLifeUsed;
         } else {
           if (this.lifeUsed) {
             this.enterEvent(0);
             this.lifeUsed = false;
           }
+          this.lifeUserCounter = 5;
           clearInterval(interval);
         }
       }, 1000)
-      // this.enterEvent();
     }
   }
   private getNowUTC() {
@@ -525,6 +520,13 @@ export class GameComponent implements OnInit {
             } else {
               this.placeFinger = false;
             }
+            // if (this.gameWon) {
+            //   this.gameStarted = false;
+            //   this.enableAnimation = false;
+            //   this.gameNotStarted = false;
+            //   this.winEvent();
+            //   clearInterval(interval);
+            // }
           }
         } else {
           //new timer
@@ -537,16 +539,24 @@ export class GameComponent implements OnInit {
           this.Am2 = timeDifference[4];
           this.As1 = timeDifference[6];
           this.As2 = timeDifference[7];
-          this.placeFingerTimer = false;
-          this.placeFinger = false;
-          this.gameTimer = true;
-          this.gameAboutToStart = false;
+          if (this.placeFingerTimer) {
+            this.placeFingerTimer = false;
+          }
+          if (this.placeFinger) {
+            this.placeFinger = false;
+          }
+          if (!this.gameTimer) {
+            this.gameTimer = true;
+          }
+          if (this.gameAboutToStart) {
+            this.gameAboutToStart = false;
+          }
           if (this.gameWon) {
             this.gameStarted = false;
             this.enableAnimation = false;
             this.gameNotStarted = false;
-            clearInterval(interval);
             this.winEvent();
+            clearInterval(interval);
           } else if (this.gameLost) {
             this.enableAnimation = false;
             this.gameStarted = false;
@@ -613,7 +623,7 @@ export class GameComponent implements OnInit {
       this.objService.updateWinStatus(true);
       this.gameWonPopUp = true;
       // this.gameLost = false;
-      this.objService.updateLostStatus(false);
+      this.objService.updateLostStatus(true);
       this.gameAboutToStart = false;
       this.gameStarted = false;
       this.gameNotStarted = false;
@@ -621,5 +631,81 @@ export class GameComponent implements OnInit {
       (error: any) => {
         console.log(error);
       })
+  }
+
+  touchStartt(e: any) {
+    e.preventDefault();
+    if (this.gameLost) {
+      if (this.gameToast) {
+        this.objService.showErrorToast('You lost the game', '');
+        this.gameToast = false;
+        this.setToastTimmer();
+      }
+      return;
+    }
+    if (!this.gameStarted) {
+      if (this.gameToast) {
+        this.objService.showErrorToast('Game not started yet', '');
+        this.gameToast = false;
+        this.setToastTimmer();
+      }
+      return;
+    }
+    if (this.gameWon) {
+      if (this.gameToast) {
+        this.objService.showErrorToast('You Won the Game', '');
+        this.gameToast = false;
+        this.setToastTimmer();
+      }
+      return;
+    }
+    if (this.gameStarted && !this.lifeUsed) {
+      this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
+        this.participantsCount = participants.length)
+        .joining((participants: any) => this.participantsCount++)
+        .leaving((participants: any) => this.participantsCount--);
+      this.enterEvent(0);
+      this.placeFinger = false;
+      this.checkUserMovement();
+      this.enableAnimation = true;
+      this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
+    } else if (this.lifeUsed) {
+      this.checkUserMovement();
+      this.lifeUsed = false;
+      this.enableAnimation = true;
+      this.followFingerAnim.style.animation = 'followFingerAnim 20s infinite'
+    }
+  }
+  touchMovee(e: any) {
+    e.preventDefault();
+    this.touchLocationMoveX = e.changedTouches[0].screenX;
+    this.touchLocationMoveY = e.changedTouches[0].screenY;
+    // if (!this.gameStarted) {
+    //   return;
+    // }
+    // if (this.gameLost || this.gameWon) {
+    //   clearInterval(this.touchMovementInterval);
+    //   return;
+    // }
+
+    // })
+  }
+  touchEndd(e: any) {
+    e.preventDefault();
+    this.enableAnimation = false;
+    if (!this.gameStarted || (this.gameWon || this.gameLost)) {
+      return;
+    }
+      if (this.lifesCount >= 1 && this.lifeUsedCount <= 3) {
+        if(!this.lifePopup){
+          this.lifePopup = true;
+          this.setTimmer();
+        }
+      } else {
+        if(!this.gameWon){
+          this.enterEvent(0);
+        }
+      }
+    
   }
 }

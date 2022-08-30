@@ -55,7 +55,7 @@ participants: any = 0;
           this.objService.updateWinStatus(true);
           return
         }
-        if(valv.key == 'EVENT_LOSS'){
+        if(valv.key == 'EVENT_ELIM'){
           this.objService.updateLostStatus(true);
           return
         }
