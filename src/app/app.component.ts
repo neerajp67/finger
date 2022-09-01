@@ -48,7 +48,7 @@ export class AppComponent {
         this.lifePopup = false;
       }
     });
-    this.subscriptionReminderPopup = this.objService.getReminderPopupStatus().subscribe((value: any) => {
+    this.subscriptionReminderPopup = this.objService.getReminderPopupCancelStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.reminderPopup = true;
       } else {
@@ -92,7 +92,7 @@ export class AppComponent {
             return;
           }
           if (this.reminderPopup) {
-            this.objService.updateReminderpopupStatus(true);
+            this.objService.updateReminderpopupCancelStatus(true);
             return;
           }
           CapacitorApp.exitApp();
@@ -100,13 +100,7 @@ export class AppComponent {
           this.prefService.upcomingEventData = [];
         } else if (window.location.href == 'http://localhost:4200/') {
           CapacitorApp.exitApp();
-        }
-        // else if (window.location.href == 'http://localhost:4200/null') {
-        //   this.route.navigate(['home']);
-        //   // window.location.href
-        //   // this.objService.showToast("backbutton");
-        // }
-        else if (this.iframe) {
+        } else if (this.iframe) {
           this.objService.updateiframVisibility(false);
           window.history.back();
           return;

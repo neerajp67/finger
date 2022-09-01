@@ -1,21 +1,17 @@
 <div class="container">
   <div class="profile-container">
     <div class="logout" (click)="logout()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
       </svg>
-      
-      <!-- <img src="../../../assets/icons/settingIcon.png" alt="Logout"> -->
     </div>
-    <!-- <div class="logout-container" (click)="logout()">
-      <div class="logout-btn">
-          <p>Logout</p>
-      </div>
-  </div> -->
     <p>Profile</p>
     <input type="file" name="importProfile" id="importProfile" #importProfile accept=".jpg,.jpeg,bmp,png"
       (change)="onChange($event)" style="display: none;">
-    <img type="file" (click)="getProfilePic()" [src]="profilePicUrl | urlSenitize" alt="profile picture">
+    <img class="profileImg" type="file" (click)="getProfilePic()" [src]="profilePicUrl | urlSenitize"
+      alt="profile picture">
   </div>
   <form class="form-container" [formGroup]="profileForm" (ngSubmit)="updateProfile(profileForm)">
     <div class="form-group">
@@ -26,21 +22,19 @@
         readonly>
     </div>
     <div class="form-group">
-      <input type="phone" class="form-control" formControlName="phone" placeholder="Phone" [ngModel]="userPhone"
-        >
+      <input type="phone" class="form-control" formControlName="phone" placeholder="Phone" [ngModel]="userPhone">
     </div>
 
     <div class="form-group">
-      <input type="text" class="form-control" formControlName="bankName" placeholder="Bank Name" [ngModel]="bankName"
-        >
+      <input type="text" class="form-control" formControlName="bankName" placeholder="Bank Name" [ngModel]="bankName">
     </div>
     <div class="form-group">
-      <input type="text" class="form-control" formControlName="bankNumber" placeholder="Bank Number" [ngModel]="bankNumber"
-        >
+      <input type="text" class="form-control" formControlName="bankNumber" placeholder="Bank Number"
+        [ngModel]="bankNumber">
     </div>
     <div class="form-group">
-      <input type="number" class="form-control" formControlName="bankAccNumber" placeholder="Bank Account Number" [ngModel]="bankAccNumber"
-        >
+      <input type="number" class="form-control" formControlName="bankAccNumber" placeholder="Bank Account Number"
+        [ngModel]="bankAccNumber">
     </div>
     <button class="updateBtn updateBtn-container" type="submit">Update</button>
   </form>

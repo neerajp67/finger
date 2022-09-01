@@ -89,7 +89,17 @@ export class WalletComponent implements OnInit {
     // if(this.withdwarAmountValue > this.walletBalance){
     //   this.objService.showErrorToast("Enter a valid amount", '');
     // }
-    this.objService.showSuccessToast('Request send to admin', '')
+    this.objService.walletWithdraw({ amount: this.withdwarAmountValue }).subscribe(async (data: any) => {
+      console.log(data);
+      this.objService.showSuccessToast('Request send to admin', '')
+      this.withdwarAmountValue = "";
+      // this.getTransactions();
+      // this.getProfile();
+    },
+      (error: any) => {
+        console.log(error);
+      })
+    
     this.withdwarAmountValue = '';
   }
 

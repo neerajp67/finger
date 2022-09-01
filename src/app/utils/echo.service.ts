@@ -9,12 +9,14 @@ import { LocalNotificationService } from './local-notification.service';
 })
 export class EchoService {
   // Pusher = Pusher;
-echo: any;
-participants: any = 0;
+  echo: any;
+  participants: any = 0;
   constructor(private objService: FingerService,
     private localNotification: LocalNotificationService) {
   }
+
   initializeEcho(userId: any) {
+
     this.echo = new Echo({
       broadcaster: 'pusher',
       key: environment.PUSHER_APP_KEY,
@@ -46,24 +48,36 @@ participants: any = 0;
       },
     });
     try {
-      this.echo.private(`Game.User.` + userId).notification((valv: any) => {
+      this.echo.private(`Game.User.` + userId).notification((value: any) => {
         var arrSuccess = ['EVENT_ENTER', 'EVENT_WIN', 'EVENT_START', 'EVENT_JOIN'];
         // var gameStatus= ['EVENT_WIN', 'EVENT_LOSS'];
-        console.log(valv);
-        console.log(valv.title, valv.message);
-        if(valv.key == 'EVENT_WIN'){
+        console.log(value);
+        console.log(value.title, value.message);
+        if (value.key == 'EVENT_WIN') {
           this.objService.updateWinStatus(true);
+          this.localNotification.sendLocal(value.title, value.message, 1)
           return
         }
-        if(valv.key == 'EVENT_ELIM'){
+        if (value.key == 'EVENT_WIN') {
+          this.objService.updateParticipantsCount({ participantsCount: value.participants });
+          return
+        }
+        if (value.key == 'EVENT_ELIM') {
           this.objService.updateLostStatus(true);
+          this.localNotification.sendLocal(value.title, value.message, 2)
           return
         }
-        if(arrSuccess.includes(valv.key)){
-          this.localNotification.sendLocal(valv.title, valv.message, 1)
+        if (value.key == 'EVENT_LOSS') {
+          this.objService.updateGameEndStatus({ eventId: value.event_id, title: value.title, message: value.message });
+          // this.objService.updateGameEndText({title: valv.title, message: valv.message})
+          this.localNotification.sendLocal(value.title, value.message, 2)
+          return
+        }
+        if (arrSuccess.includes(value.key)) {
+          this.localNotification.sendLocal(value.title, value.message, 1)
           // this.objService.showSuccessToast(valv.message, valv.title)
-        } else{
-          this.localNotification.sendLocal(valv.title, valv.message, 2)
+        } else {
+          this.localNotification.sendLocal(value.title, value.message, 2)
           // this.objService.showErrorToast(valv.message, valv.title)
         }
       });
@@ -75,6 +89,12 @@ participants: any = 0;
     this.echo.join('Event.' + gameId).here((participants: any) =>
       this.participants = participants.length)
       .joining((participants: any) => this.participants++)
-      .leaving((participants: any) => this.participants--);
+      .leaving((participants: any) => this.participants--)
+      .notification((value: any) => {
+        console.log('participant_count')
+        console.log(value);
+        this.objService.updateParticipantsCount({gameId: value.id, 
+          remaining_participant: value.remaining_participant});
+      });
   }
 }

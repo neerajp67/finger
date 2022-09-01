@@ -26,8 +26,11 @@
     <div class="timmer-after" *ngIf="gameNotStartedText">
         <p>Game is not started yet</p>
     </div>
-    <div class="timmer-after" *ngIf="gameLost">
+    <div class="timmer-after" *ngIf="gameLost && !gameEnd">
         <p>You were eliminated</p>
+    </div>
+    <div class="timmer-after" *ngIf="gameEnd">
+        <p>{{gameEndText}}</p>
     </div>
 
     <div class="timmer-after" *ngIf="placeFingerTimer">

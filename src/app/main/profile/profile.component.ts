@@ -63,7 +63,6 @@ export class ProfileComponent implements OnInit {
       this.bankAccNumber = data.bank_acc_number;
       if (data.avatar != null) {
         this.profilePicUrl = this.objService.baseUrl + '/storage/' + data.avatar;
-      
       } else {
         this.profilePicUrl = "../../../assets/icons/defaultProfilePic.png";
       }

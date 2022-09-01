@@ -20,6 +20,8 @@ export class FingerService {
 
   private gameWon = new Subject<any>();
   private gameLost = new Subject<any>();
+  private gameEnd = new Subject<any>();
+  private participants = new Subject<any>();
 
   constructor(private httpClient: HttpClient,
     private toastr: ToastrService,
@@ -44,10 +46,10 @@ export class FingerService {
   getLifePopupStatus(): Observable<any> {
     return this.lifepopupsubject.asObservable();
   }
-  updateReminderpopupStatus(value: boolean) {
+  updateReminderpopupCancelStatus(value: boolean) {
     this.reminderpopupsubject.next({ status: value });
   }
-  getReminderPopupStatus(): Observable<any> {
+  getReminderPopupCancelStatus(): Observable<any> {
     return this.reminderpopupsubject.asObservable();
   }
   updateLoaderStatus(value: boolean) {
@@ -81,6 +83,25 @@ export class FingerService {
   getLostStatus(): Observable<any> {
     return this.gameLost.asObservable();
   }
+  updateGameEndStatus(value: any) {
+    this.gameEnd.next({ status: value });
+  }
+  getGameEndStatus(): Observable<any> {
+    return this.gameEnd.asObservable();
+  }
+  updateParticipantsCount(value: any) {
+    this.participants.next({ status: value });
+  }
+  getParticipantsCount(): Observable<any> {
+    return this.participants.asObservable();
+  }
+  // updateGameEndText(value: any) {
+  //   this.gameEndText.next({ status: value });
+  // }
+  // getGameEndText(): Observable<any> {
+  //   return this.gameEndText.asObservable();
+  // }
+
 
   // signInWithGoogle(googleLoginOptions: any): void {
   //   this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID, googleLoginOptions);
@@ -144,6 +165,9 @@ export class FingerService {
   walletCredit(obj: any) {
     return this.httpClient.post(this.baseUrl + '/api/users/user-wallets', obj);
   }
+  walletWithdraw(obj: any) {
+    return this.httpClient.post(this.baseUrl + '/api/wallet-request', obj);
+  } 
   paystack(obj: any) {
     return this.httpClient.get(this.baseUrl + `/api/paystack/${obj.email}/${obj.amount}`);
   }

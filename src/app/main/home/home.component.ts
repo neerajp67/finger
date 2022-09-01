@@ -38,8 +38,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   // messages: any[] = [];
   subscription!: Subscription;
   subscriptionReminderPopup!: Subscription;
- 
 
+  echoInitialized: boolean = false;
   constructor(private route: Router, private objService: FingerService,
     private datePipe: DatePipe,
     private prefService: PrefrenceService,
@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     //     this.getEvents();
     //   }
     // });
+
     this.subscription = this.objService.getLifePopupStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.lifePopup = true;
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         this.lifePopup = false;
       }
     });
-    this.subscriptionReminderPopup = this.objService.getReminderPopupStatus().subscribe((value: any) => {
+    this.subscriptionReminderPopup = this.objService.getReminderPopupCancelStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.reminderPopupCancle = true;
       } else {
@@ -80,11 +81,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     });
   }
   ngAfterViewChecked() {
-    this.objService.updateHomeLoaderStatus(false);
+    // this.objService.updateHomeLoaderStatus(false);
   }
   ngOnInit(): void {
     // this.objService.updateLoaderStatus(true);
-    this.objService.updateHomeLoaderStatus(true);
+    // this.objService.updateHomeLoaderStatus(true);
     this.getUserDetail();
     this.setting();
     this.upcomingEventArray = this.prefService.upcomingEventData;
@@ -128,7 +129,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       this.userDetail = data;
       localStorage.setItem('user', JSON.stringify(data));
       this.prefService.setName('user', JSON.stringify(data));
-      this.echo.initializeEcho(data.id);
+      if(!this.echoInitialized){
+        this.echo.initializeEcho(data.id);
+        this.echoInitialized = true;
+      }
     },
       (error: any) => {
         console.log(error);
@@ -157,7 +161,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       console.log(data);
       this.upcomingEventArray = data.upcoming_event;
       this.myEvents = data.current_event;
-       if (this.myEvents.length > 0) {
+      if (this.myEvents.length > 0) {
         for (let i = this.myEvents.length - 1; i < this.myEvents.length; i--) {
           var startAtTime = new Date(this.myEvents[i].enter_at).getTime();
           this.eventCounter(startAtTime, this.myEvents.length);
@@ -290,10 +294,9 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         s2 = timeDifference[7]
         var timer = { h1, h2, m1, m2, s1, s2 };
         this.eventStartTime.unshift(timer);
-        if( timeDifference[0] == '0' && timeDifference[1] == '0'){
-          if(timeDifference[3] == '0' && parseInt(timeDifference[4]) <= 4){
-            if(!this.reminderPopupCancle){
-              this.objService.updateReminderpopupStatus(true);
+        if (timeDifference[0] == '0' && timeDifference[1] == '0') {
+          if (timeDifference[3] == '0' && parseInt(timeDifference[4]) <= 4) {
+            if (!this.reminderPopupCancle) {
               this.reminderPopup = true;
             }
           }
@@ -324,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         console.log(error);
       })
   }
-  joinEvent(gameId: any){
+  joinEvent(gameId: any) {
     this.joinMainEvent(gameId);
     this.reminderPopup = false;
   }
