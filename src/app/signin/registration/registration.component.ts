@@ -3,7 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
-// import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import {
+  FacebookLogin,
+  FacebookLoginResponse,
+} from '@capacitor-community/facebook-login';
 
 @Component({
   selector: 'app-registration',
@@ -12,15 +16,20 @@ import { PrefrenceService } from 'src/app/utils/prefrence.service';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup;
-  // socialUser!: SocialUser;
-  isLoggedin?: boolean;
   termComditionChecked: boolean = false;
+  user: any = null;
+  fbToken: any;
 
   constructor(private formBuilder: FormBuilder,
     private route: Router,
     private objService: FingerService,
-    private prefService: PrefrenceService) { }
-
+    private prefService: PrefrenceService) {
+    this.initializeApp();
+  }
+  initializeApp() {
+    GoogleAuth.initialize();
+    FacebookLogin.initialize({ appId: '860095054976730' });
+  }
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -35,13 +44,52 @@ export class RegistrationComponent implements OnInit {
   //   return result.user;
   // }
 
-  signInWithGoogle(): void {
-    // this.objService.signInWithGoogle();
-    // this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  async signInWithGoogle() {
+    this.user = await GoogleAuth.signIn();
+    console.log('User: ', this.user);
   }
-  signInWithFacebook(): void {
-    // this.objService.signInWithFacebook();
-    // this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  async signInWithFacebook() {
+    // this.objService.updateLoaderStatus(true);
+    const FACEBOOK_PERMISSIONS = [
+      'email',
+      'user_birthday',
+      'user_photos',
+      'user_gender',
+    ];
+    const result = await((
+      FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS })
+    ));
+
+    // if (result.accessToken && result.accessToken.userId) {
+    //   this.fbToken = result.accessToken;
+    //   console.log(`Face  book access token is ${result.accessToken}`);
+    //   this.getFbProfile();
+    // } 
+    // else if (result.accessToken && !result.accessToken.userId) {
+    //   this.getCurentToken();
+    // } 
+     if (result.accessToken) {
+      this.fbToken = result.accessToken;
+      console.log(`Facebook access token is ${result.accessToken}`);
+      this.getFbProfile();
+    }
+    else {
+      this.getCurentToken();
+      console.log('login failed');
+    }
+  }
+  async getCurentToken() {
+    const result = await FacebookLogin.getCurrentAccessToken();
+    if(result.accessToken){
+      this.fbToken = result.accessToken;
+      this.getFbProfile();
+    } else {
+      console.log('login faild, no access token')
+    }
+  }
+  async getFbProfile(){
+    const result = await FacebookLogin.getProfile({ fields: ['email', 'name', 'id'] });
+    this.user = result;
   }
 
   navigateToLogin() {
@@ -54,47 +102,40 @@ export class RegistrationComponent implements OnInit {
   privacyPolicyCheck() {
     console.log("Privacy policy check clicked");
   }
-  // name: ['', Validators.required],
-  //     email: ['', Validators.required],
-  //     password: ['', Validators.required],
-  //     password_confirm: ['', Validators.required]
   registerUser(form: FormGroup) {
     if (form.value.name == "") {
-      // alert("please enter name");
       this.objService.showErrorToast("Please enter name", '');
       return;
     } else if (form.value.email == "") {
-      // alert("please enter email");
       this.objService.showErrorToast("Please enter email", '');
       return;
-    } else if (form.value.phone == "" || form.value.phone.length != 10) {
-      // alert("please enter email");
+    } else if (form.value.phone == "" ) {
+      this.objService.showErrorToast("Please enter valid phone", '');
+      return;
+    } else if (form.value.phone.length != 11) {
       this.objService.showErrorToast("Please enter valid phone", '');
       return;
     } else if (form.value.password == "") {
-      // alert("please enter password");
       this.objService.showErrorToast("Please enter password", '');
       return;
     } else if (form.value.password_confirm == "") {
-      // alert("please confirm password");
       this.objService.showErrorToast("Please confirm passwor", '');
       return;
     } else if (form.value.password !== form.value.password_confirm) {
-      // alert("Password does not match");
       this.objService.showErrorToast("Password does not match", '');
       return;
     }
     this.objService.register({
-      name: form.value.name, email: form.value.email, mobile: form.value.phone, 
+      name: form.value.name, email: form.value.email, mobile: form.value.phone,
       password: form.value.password,
-      password_confirmation: form.value.password_confirm, firebase_id: form.value.password, device_id: '1234', device_type: 'android', device_token: '1234'
+      password_confirmation: form.value.password_confirm, firebase_id: form.value.password,
+      device_id: '1234', device_type: 'android', device_token: '1234'
     }).subscribe((data: any) => {
       console.log(data);
       localStorage.setItem('authToken', data.token);
       this.prefService.setName('authToken', data.token);
       this.objService.showSuccessToast("Registered Successfully", '');
       this.route.navigate(['home']);
-      // this.route.navigate(['slider']);
     },
       (error: any) => {
         console.log('error');

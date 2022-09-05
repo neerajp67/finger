@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
+  appId: 'com.lastfinger.app',
   appName: 'finger-game',
   webDir: 'dist/finger-game',
   bundledWebRuntime: false,
@@ -9,6 +9,8 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true
   },
+
+  
   server: {
     cleartext: true,
     //hostname: 'phplaravel-596529-2651231.cloudwaysapps.com',
@@ -16,7 +18,9 @@ const config: CapacitorConfig = {
     hostname: 'localhost:4200',
     allowNavigation: [
       "localhost:4200",
-      "*.paystack.com"
+      "*.paystack.com",
+      "*.cloudwaysapps.com",
+      "socket.thinkindragon.com"
     ],
   },
   plugins: {
@@ -26,11 +30,12 @@ const config: CapacitorConfig = {
       //sound: 'beep.mp3',
     },
     GoogleAuth: {
-      scopes: ["profile","home", "wallet"],
-      serverClientId: "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com"
-      },
+      scopes: ["profile", "email"],
+      serverClientId: "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com",
+      forceCodeForRefreshToken: true
+    },
     PushNotifications: {
-      presentationOptions: ['badge','alert', 'sound'],
+      presentationOptions: ['badge', 'alert', 'sound'],
     },
     FirebaseAuthentication: {
       skipNativeAuth: false,

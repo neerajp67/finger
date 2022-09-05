@@ -7,15 +7,19 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1093527882296:android:813eb6bf4acb9eba62b4cd",
+        "mobilesdk_app_id": "1:1093527882296:android:a9e9403da545a12262b4cd",
         "android_client_info": {
-          "package_name": "com.example.app"
+          "package_name": "com.lastfinger.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1093527882296-t21rpdjeqe7jlpi3c868fspdrp364egf.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "1093527882296-brqaqb8204itcrl706oicb7foshvdrcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lastfinger.app",
+            "certificate_hash": "4fbba890af412c05a86b7bf77c95eda57b620c64"
+          }
         }
       ],
       "api_key": [

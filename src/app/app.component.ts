@@ -86,7 +86,7 @@ export class AppComponent {
         this.prefService.myEventdata = [];
         this.prefService.upcomingEventData = [];
       } else {
-        if (window.location.href == 'http://localhost:4200/home') {
+        if (window.location.href == `http://localhost:4200/home`) {
           if (this.lifePopup) {
             this.objService.updateLifepopupStatus(false);
             return;

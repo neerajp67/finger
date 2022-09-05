@@ -3,12 +3,14 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { PrefrenceService } from './prefrence.service';
 import { FingerService } from './finger.service';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 
 @Injectable()
@@ -17,11 +19,11 @@ export class HeadersInterceptor implements HttpInterceptor {
   loader: boolean = false;
   subscriptionLoader!: Subscription;
 
-  noLoaderApi = ['http://phplaravel-596529-2814684.cloudwaysapps.com/api/game-events/enter-event', 
-  'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting']
+  noLoaderApi = ['http://phplaravel-596529-2814684.cloudwaysapps.com/api/game-events/enter-event',
+    'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting']
 
-  constructor(private prefService: PrefrenceService, 
-    private objService: FingerService) {
+  constructor(private prefService: PrefrenceService,
+    private objService: FingerService, private router: Router) {
     this.subscriptionLoader = this.objService.getLoaderStatus().subscribe((value: any) => {
       if (Object.values(value)[0]) {
         this.loader = true;
@@ -38,9 +40,9 @@ export class HeadersInterceptor implements HttpInterceptor {
     // if(request.url != 'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting'){
     //   this.objService.updateLoaderStatus(true);
     // }
-    if(this.noLoaderApi.includes(request.url)){
+    if (this.noLoaderApi.includes(request.url)) {
       this.objService.updateLoaderStatus(false);
-    } else{
+    } else {
       this.objService.updateLoaderStatus(true);
     }
     // console.log(this.prefService.getStorage('authToken'));
@@ -52,6 +54,12 @@ export class HeadersInterceptor implements HttpInterceptor {
     })
     // this.objService.updateLoaderStatus(false);
     return next.handle(request)
-    .pipe(finalize(() => this.objService.updateLoaderStatus(false)));
+      .pipe(tap((err: any) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status == 401) {
+            this.router.navigate(['login']);
+          }
+        }
+      }), finalize(() => this.objService.updateLoaderStatus(false)));
   }
 }

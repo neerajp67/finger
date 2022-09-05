@@ -39,23 +39,27 @@
             <input type="password" class="form-control" id="password" placeholder="Password">
         </div>
     </div> -->
-    <!-- <form class="form-container" [formGroup]="registrationForm" (ngSubmit)="registerUser(registrationForm)"
-        *ngIf="isLoggedin">
+    <form class="form-container" [formGroup]="registrationForm" (ngSubmit)="registerUser(registrationForm)"
+        *ngIf="user != null">
         <div class="form-group">
             <input type="text" class="form-control" formControlName="name" placeholder="Name"
-                [ngModel]="socialUser.name">
+                [ngModel]="user.name">
+        </div>
+        <div class="form-group">
+            <input type="phone" class="form-control" formControlName="phone" placeholder="Phone Number"
+            [ngModel]="user.phone">
         </div>
         <div class="form-group">
             <input type="email" class="form-control" formControlName="email" placeholder="Email Address"
-                [ngModel]="socialUser.email" readonly>
+                [ngModel]="user.email" readonly>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" formControlName="password" placeholder="Password"
-                [ngModel]="socialUser.id">
+                [ngModel]="user.id">
         </div>
         <div class="form-group">
             <input type="password" class="form-control" formControlName="password_confirm"
-                placeholder="Confirm Password" [ngModel]="socialUser.id">
+                placeholder="Confirm Password" [ngModel]="user.id">
         </div>
         <div class="privacyPolicy">
             <p>I have read the <span (click)="openPrivacyPolicy()">Privacy Policy</span></p>
@@ -63,9 +67,9 @@
             termComditionChecked = !termComditionChecked" />
         </div>
         <button class="loginBtn loginBtn-container" type="submit">GET STARTED</button>
-    </form> -->
+    </form>
     <form class="form-container" [formGroup]="registrationForm" (ngSubmit)="registerUser(registrationForm)"
-        *ngIf="!isLoggedin">
+        *ngIf="user == null">
         <div class="form-group">
             <input type="text" class="form-control" formControlName="name" placeholder="Name">
         </div>

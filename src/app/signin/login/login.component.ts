@@ -3,10 +3,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
-// import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-// import * as firebase from 'firebase';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { FirebaseService } from 'src/app/utils/firebase.service';
+import {
+  FacebookLogin,
+  FacebookLoginResponse,
+} from '@capacitor-community/facebook-login';
 
 @Component({
   selector: 'app-login',
@@ -15,21 +17,28 @@ import { FirebaseService } from 'src/app/utils/firebase.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  // socialUser!: SocialUser;
-  isLoggedin?: boolean;
   email: String = '';
+  user: any = null;
+  fbToken: any;
+
+  googleLoginOptions = {
+    scope: 'profile email'
+  };
+
 
   constructor(private formBuilder: FormBuilder,
     private route: Router,
     private objService: FingerService,
     private prefService: PrefrenceService,
-    private firebaseService: FirebaseService) {
-    // var authToken = localStorage.getItem('authToken');
+    private firebaseService: FirebaseService,
+  ) {
+    // var authToken = localStorage.getItem(',authToken');
     var authToken = localStorage.getItem('authToken');
     if (authToken != null) {
       route.navigate(['home']);
       return;
     }
+    this.initializeApp();
     // if (authToken != null || authToken != '') {
     //   route.navigate(['main']);
     //   return;
@@ -43,11 +52,12 @@ export class LoginComponent implements OnInit {
     // });
   }
 
-
+  initializeApp() {
+    GoogleAuth.initialize();
+    FacebookLogin.initialize({ appId: '860095054976730' });
+  }
 
   ngOnInit(): void {
-    // firebase.initializeApp(config);
-    this.ionViewDidEnter(); 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
@@ -57,27 +67,47 @@ export class LoginComponent implements OnInit {
   navigateToRegister() {
     this.route.navigate(['register']);
   }
-  // signInWithGoogle() {
-  //   // const result = FirebaseAuthentication.signInWithGoogle();
-  //   // return result.user
-  // }
   async signInWithGoogle() {
-    
-    const user = await GoogleAuth.signIn();
-    if (user) {
-      console.log(user);
-      this.firebaseLogin(user);
+    this.user = await GoogleAuth.signIn();
+    console.log('User: ', this.user);
+    this.firebaseLogin(this.user);
+  }
+
+  async signInWithFacebook() {
+    const FACEBOOK_PERMISSIONS = [
+      'email',
+      'user_birthday',
+      'user_photos',
+      'user_gender',
+    ];
+    const result = await ((
+      FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS })
+    ));
+
+    if (result.accessToken && result.accessToken.userId) {
+      this.fbToken = result.accessToken;
+      console.log(`Face  book access token is ${result.accessToken}`);
+      this.getFbProfile();
+    } else if (result.accessToken && !result.accessToken.userId) {
+      this.getCurentToken();
+    } else {
+      console.log('login failed');
     }
   }
-  ionViewDidEnter(){
-    GoogleAuth.initialize();
-  }
-  // const signInWithGoogle = async () => {
-  //   const result = await FirebaseAuthentication.signInWithGoogle();
-  //   return result.user;
-  // };
 
-  signInWithFacebook(): void {
+  async getCurentToken() {
+    const result = await FacebookLogin.getCurrentAccessToken();
+    if(result.accessToken){
+      this.fbToken = result.accessToken;
+      this.getFbProfile();
+    } else {
+      console.log('login faild, no access token')
+    }
+  }
+  async getFbProfile(){
+    const result = await FacebookLogin.getProfile({ fields: ['email', 'name', 'id'] });
+    this.user = result;
+    this.firebaseLogin(this.user);
   }
   signOut(): void {
   }
@@ -88,21 +118,20 @@ export class LoginComponent implements OnInit {
     console.log(this.firebaseService.platform);
     console.log(this.firebaseService.deviceId);
     if (form.value.email == "") {
-      // alert("please enter email");
       this.objService.showErrorToast("please enter email", "");
       return;
     } else if (form.value.password == "") {
-      // alert("please enter password")
       this.objService.showErrorToast("please enter password", "");
       return;
     }
     this.objService.login({
       email: form.value.email, password: form.value.password,
-      device_id: this.firebaseService.deviceId, 
-      // device_type: this.firebaseService.platform, 
-      // device_token: this.firebaseService.deviceToken
-      device_type: 'android', 
-      device_token: '123'
+      // device_id: '123',
+      device_id: this.firebaseService.deviceId,
+      device_type: this.firebaseService.platform, 
+      device_token: this.firebaseService.deviceToken,
+      // device_type: 'android',
+      // device_token: '123'
     }).subscribe((data: any) => {
       console.log(data);
       this.objService.showSuccessToast("Logged in successfully", '');
@@ -123,8 +152,11 @@ export class LoginComponent implements OnInit {
     console.log(user);
     this.objService.firebaseLogin({
       email: user.email, firebase_id: user.id,
-      device_id: this.firebaseService.deviceId , device_type: this.firebaseService.platform, 
+      device_id: this.firebaseService.deviceId,
+      device_type: this.firebaseService.platform, 
       device_token: this.firebaseService.deviceToken
+      // device_type: 'android',
+      // device_token: '123'
     }).subscribe((data: any) => {
       console.log(data);
       localStorage.setItem('authToken', data.token);

@@ -167,13 +167,13 @@ export class GameComponent implements OnInit {
     this.participantsCountSubscription = this.objService.getParticipantsCount().subscribe((value: any) => {
       if (value.status.gameId == this.gameId) {
         this.participantsCount = value.status.remaining_participant;
-        if(this.participantsCount == 1 && !this.gameLost){
+        if (this.participantsCount == 1 && !this.gameLost) {
           setTimeout(() => {
             this.enterEvent(0);
           }, 1000);
-        } else if(this.participantsCount == 1 && this.gameLost){
+        } else if (this.participantsCount == 1 && this.gameLost) {
           setTimeout(() => {
-            this.objService.updateGameEndStatus({ eventId: this.gameId, title: 'Event is Ended, ', message: 'try your luck next time' });
+            this.objService.updateGameEndStatus({ eventId: this.gameId, title: 'Event is Ended', message: 'try your luck next time' });
           }, 1000);
         }
         this.joinedParticipantCount = value.status.joined_participant
@@ -349,7 +349,7 @@ export class GameComponent implements OnInit {
       if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
-        if(this.lifePopup){
+        if (this.lifePopup) {
           this.lifePopup = false;
           this.enterEvent(0);
         }
@@ -359,37 +359,115 @@ export class GameComponent implements OnInit {
   }
   checkUserMovement() {
     this.touchMoveTimer = setTimeout(() => {
-      if (this.touchLocationX != this.touchLocationMoveX || this.touchLocationY != this.touchLocationMoveY) {
-        console.log('touch different');
-        console.log(this.touchLocationX + ' ' + this.touchLocationY)
-        console.log(this.touchLocationMoveX + ' ' + this.touchLocationMoveY)
+      var x1, x2, y1, y2;
+      x1 = this.touchLocationMoveX + 10;
+      x2 = this.touchLocationMoveX - 10;
+      y1 = this.touchLocationMoveY + 10;
+      y2 = this.touchLocationMoveY - 10;
+      console.log(x1, x2, y1, y2);
+      console.log(this.touchLocationX, this.touchLocationY);
+      if (this.touchLocationX < x1 && this.touchLocationX > x2
+        && this.touchLocationY < y1 && this.touchLocationY > y2) {
+        console.log('same');
+        if (!this.gameLost && !this.gameWon) {
+          this.touchPauseTimer();
+          clearTimeout(this.touchMoveTimer);
+        }
+      } else {
+        console.log('different');
         this.touchLocationX = this.touchLocationMoveX;
         this.touchLocationY = this.touchLocationMoveY;
-        if (this.gameWon) {
+        if (this.gameWon || this.gameLost) {
           clearTimeout(this.touchMoveTimer);
           return;
         }
         this.checkUserMovement();
       }
-      else {
-        console.log("touch same")
-        if (!this.gameLost && !this.gameWon) {
-          if (this.lifesCount >= 1 && this.lifeUsedCount < 3) {
-            if (!this.lifePopup) {
-              this.lifePopup = true;
-              this.setTimmer();
+      // this.checkUserMovement();
+      // if (this.touchLocationX != this.touchLocationMoveX || this.touchLocationY != this.touchLocationMoveY) {
+      //   console.log('touch different');
+      //   console.log(this.touchLocationX + ' ' + this.touchLocationY)
+      //   console.log(this.touchLocationMoveX + ' ' + this.touchLocationMoveY)
+      //   this.touchLocationX = this.touchLocationMoveX;
+      //   this.touchLocationY = this.touchLocationMoveY;
+      //   if (this.gameWon || this.gameLost) {
+      //     clearTimeout(this.touchMoveTimer);
+      //     return;
+      //   }
+      //   this.checkUserMovement();
+      // }
+      // else {
+      //   console.log("touch same")
+      //   if (!this.gameLost && !this.gameWon) {
+      //     this.touchPauseTimer();
+      //     clearTimeout(this.touchMoveTimer);
+      //   }
+      //   if (!this.gameLost && !this.gameWon) {
+      //     if (this.lifesCount >= 1 && this.lifeUsedCount < 3) {
+      //       if (!this.lifePopup) {
+      //         this.lifePopup = true;
+      //         this.setTimmer();
+      //       }
+      //       clearTimeout(this.touchMoveTimer);
+      //     }
+      //     else {
+      //       clearTimeout(this.touchMoveTimer);
+      //       if (!this.gameWon) {
+      //         this.enterEvent(0);
+      //       }
+      //     }
+      //   }
+      // }
+    }, 1000);
+  }
+  touchPauseTimer() {
+    var time = 2
+    var interval = setInterval(() => {
+      var x1, x2, y1, y2;
+      x1 = this.touchLocationMoveX + 10;
+      x2 = this.touchLocationMoveX - 10;
+      y1 = this.touchLocationMoveY + 10;
+      y2 = this.touchLocationMoveY - 10;
+      console.log(x1, x2, y1, y2);
+      console.log(this.touchLocationX, this.touchLocationY);
+      if (time > 0) {
+        time--;
+        if (this.touchLocationX < x1 && this.touchLocationX > x2
+          && this.touchLocationY < y1 && this.touchLocationY > y2) {
+          console.log('same');
+        } else {
+          clearInterval(interval);
+          this.checkUserMovement();
+          console.log('touchPauseTimer different')
+          return;
+        }
+      } else {
+        if (this.touchLocationX < x1 && this.touchLocationX > x2
+          && this.touchLocationY < y1 && this.touchLocationY > y2) {
+          console.log('same');
+          clearInterval(interval);
+          if (!this.gameLost && !this.gameWon) {
+            if (this.lifesCount >= 1 && this.lifeUsedCount < 3) {
+              if (!this.lifePopup) {
+                console.log('touchPauseTimer after 5 same')
+                this.lifePopup = true;
+                this.setTimmer();
+              }
             }
-            clearTimeout(this.touchMoveTimer);
-          }
-          else {
-            clearTimeout(this.touchMoveTimer);
-            if (!this.gameWon) {
-              this.enterEvent(0);
+            else {
+              if (!this.gameWon) {
+                console.log('touchPauseTimer no life')
+                this.enterEvent(0);
+              }
             }
           }
+        } else {
+          clearInterval(interval);
+          this.checkUserMovement();
+          console.log('touchPauseTimer else different')
         }
       }
-    }, 4000);
+    }, 1000)
   }
   enterEvent(life: any) {
     if (this.callEnterEvent)
@@ -445,6 +523,7 @@ export class GameComponent implements OnInit {
   useLife(event: any) {
     if (event == 'no') {
       this.lifePopup = false;
+      this.touchMoveLogger = false;
       this.enterEvent(0);
     } else {
       this.lifeUsed = true;
@@ -453,6 +532,7 @@ export class GameComponent implements OnInit {
       this.lifesCount--;
       this.lifeUsedCount++;
       this.lifePopup = false;
+      this.touchMoveLogger = true;
       var timeLeftLifeUsed: number = 5;
       var interval = setInterval(() => {
         if (timeLeftLifeUsed > 0) {
@@ -462,6 +542,7 @@ export class GameComponent implements OnInit {
           if (this.lifeUsed) {
             this.enterEvent(0);
             this.lifeUsed = false;
+            this.touchMoveLogger = false;
           }
           this.lifeUserCounter = 5;
           clearInterval(interval);
@@ -672,6 +753,7 @@ export class GameComponent implements OnInit {
   touchStartt(e: any) {
     e.preventDefault();
     console.log('start')
+    // this.checkUserMovement(); //for test
     if (this.gameLost) {
       if (this.gameToast) {
         this.objService.showErrorToast('You lost the game', '');
@@ -698,18 +780,18 @@ export class GameComponent implements OnInit {
     }
     if (this.gameStarted && !this.lifeUsed) {
       this.echoService.echo.join('Event.' + this.gameId).here((participants: any) =>
-      this.participantsCount = participants.length)
-      .joining((participants: any) => this.participantsCount++)
-      .leaving((participants: any) => this.participantsCount--)
-      .listen('participantRemaining', (value: any) => {
-        console.log(value);
-        console.log(value.id + ' ' + value.eventLog.remaining.remaining_participant);
-        this.objService.updateParticipantsCount({
-          gameId: value.id,
-          remaining_participant: value.eventLog.remaining.remaining_participant,
-          joined_participant: value.eventLog.remaining.joined_participant
+        this.participantsCount = participants.length)
+        .joining((participants: any) => this.participantsCount++)
+        .leaving((participants: any) => this.participantsCount--)
+        .listen('participantRemaining', (value: any) => {
+          console.log(value);
+          console.log(value.id + ' ' + value.eventLog.remaining.remaining_participant);
+          this.objService.updateParticipantsCount({
+            gameId: value.id,
+            remaining_participant: value.eventLog.remaining.remaining_participant,
+            joined_participant: value.eventLog.remaining.joined_participant
+          });
         });
-      });
       this.enterEvent(0);
       this.placeFinger = false;
       this.checkUserMovement();
@@ -726,8 +808,10 @@ export class GameComponent implements OnInit {
     e.preventDefault();
     console.log('move')
     // if(this.touchMoveLogger){
-      this.touchLocationMoveX = e.changedTouches[0].screenX;
-      this.touchLocationMoveY = e.changedTouches[0].screenY;
+
+    this.touchLocationMoveX = e.changedTouches[0].screenX;
+    this.touchLocationMoveY = e.changedTouches[0].screenY;
+    //   this.touchMoveLogger = false;
     // }
     // if (!this.gameStarted) {
     //   return;

@@ -82,6 +82,15 @@ export class ProfileComponent implements OnInit {
     this.profilePicUrl = URL.createObjectURL(this.profilePic);
   }
   updateProfile(form: FormGroup) {
+    if (form.value.name == "") {
+      // alert("please enter name");
+      this.objService.showErrorToast("Please enter name", '');
+      return;
+    }  else if (form.value.phone == "" || form.value.phone.length != 11) {
+      // alert("please enter email");
+      this.objService.showErrorToast("Please enter valid phone", '');
+      return;
+    }
     const formData = new FormData();
     var a = typeof( this.profilePic);
     if(this.profilePic != undefined){
