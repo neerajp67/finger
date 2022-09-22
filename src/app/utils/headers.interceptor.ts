@@ -19,8 +19,8 @@ export class HeadersInterceptor implements HttpInterceptor {
   loader: boolean = false;
   subscriptionLoader!: Subscription;
 
-  noLoaderApi = ['http://phplaravel-596529-2814684.cloudwaysapps.com/api/game-events/enter-event',
-    'http://phplaravel-596529-2814684.cloudwaysapps.com/api/setting']
+  noLoaderApi = ['https://finger.chalesocial.com/api/game-events/enter-event',
+    'https://finger.chalesocial.com/api/setting']
 
   constructor(private prefService: PrefrenceService,
     private objService: FingerService, private router: Router) {
@@ -59,7 +59,12 @@ export class HeadersInterceptor implements HttpInterceptor {
           if (err.status == 401) {
             this.router.navigate(['login']);
           }
-        }
+        } 
+        // else if(err.type == 0 && window.location.href != `http://localhost:4200/login`) {
+        //   this.router.navigate(['login']);
+        //   localStorage.clear();
+        //   this.objService.showErrorToast('', "Error Occurred");
+        // }
       }), finalize(() => this.objService.updateLoaderStatus(false)));
   }
 }

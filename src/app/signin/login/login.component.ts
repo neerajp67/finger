@@ -128,10 +128,10 @@ export class LoginComponent implements OnInit {
       email: form.value.email, password: form.value.password,
       // device_id: '123',
       device_id: this.firebaseService.deviceId,
-      device_type: this.firebaseService.platform, 
-      device_token: this.firebaseService.deviceToken,
-      // device_type: 'android',
-      // device_token: '123'
+      // device_type: this.firebaseService.platform, 
+      // device_token: this.firebaseService.deviceToken,
+      device_type: 'android',
+      device_token: '123'
     }).subscribe((data: any) => {
       console.log(data);
       this.objService.showSuccessToast("Logged in successfully", '');
@@ -167,6 +167,10 @@ export class LoginComponent implements OnInit {
       (error: any) => {
         console.log('error');
         console.log(error);
+        if(error.status == 422){
+          // this.route.navigate(['register']);
+          this.route.navigate(['register'], { queryParams: { name: user.name, email: user.email, id: user.id } });
+        }
         this.objService.showErrorToast(error.error.message, '');
       })
   }

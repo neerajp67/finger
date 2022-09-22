@@ -127,7 +127,6 @@ export class GameComponent implements OnInit {
     // this.participantsCount = this.echoService.participants;
     this.route.queryParams.subscribe(data =>
       this.gameId = Object.values(data)[0]
-
     );
     this.getEvent();
     this.getProfile();

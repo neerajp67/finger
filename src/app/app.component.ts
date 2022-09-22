@@ -118,8 +118,9 @@ export class AppComponent {
       console.log(data);
       CapacitorApp.getInfo().then((value: any) => {
         if (value.version != data.app_version) {
-          this.appUpdateLink = value.app_store_link;
+          this.appUpdateLink = data.app_store_link;
           this.versionUpdateRequired = true;
+          console.log('version: ' + value.version + ' ' + data.app_version);
         }
       });
 

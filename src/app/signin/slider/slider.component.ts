@@ -20,13 +20,13 @@ export class SliderComponent implements OnInit {
     '../../../assets/images/sliderImg2.png',
     '../../../assets/images/sliderImg3.png'];
   ;
-  sliderHeadingArr = ['Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum'];
+  sliderHeadingArr = ['',
+    ' How to Play',
+    'Tips on how to win:-'];
   ;
-  sliderSubHeadingArr = ['Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit',
-    'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit',
-    'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'];
+  sliderSubHeadingArr = ['Last Finger is a simple game that allows you to compete with others in a game of Last Finger on the app.',
+    'Click join with your extra live and wait for the countdown to start Then place you finger and keep moving it around the screen until you are the last person on the app',
+    'Make sure to buy extra lives so you can stand a better chance of winning'];
   ;
   sliderArr: any;
   constructor(

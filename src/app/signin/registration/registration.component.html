@@ -53,13 +53,13 @@
             <input type="email" class="form-control" formControlName="email" placeholder="Email Address"
                 [ngModel]="user.email" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group hide">
             <input type="password" class="form-control" formControlName="password" placeholder="Password"
-                [ngModel]="user.id">
+                [ngModel]="user.id" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group hide">
             <input type="password" class="form-control" formControlName="password_confirm"
-                placeholder="Confirm Password" [ngModel]="user.id">
+                placeholder="Confirm Password" [ngModel]="user.id" readonly>
         </div>
         <div class="privacyPolicy">
             <p>I have read the <span (click)="openPrivacyPolicy()">Privacy Policy</span></p>

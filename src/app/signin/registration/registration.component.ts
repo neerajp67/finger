@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
@@ -8,6 +8,7 @@ import {
   FacebookLogin,
   FacebookLoginResponse,
 } from '@capacitor-community/facebook-login';
+import { FirebaseService } from 'src/app/utils/firebase.service';
 
 @Component({
   selector: 'app-registration',
@@ -23,7 +24,9 @@ export class RegistrationComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private route: Router,
     private objService: FingerService,
-    private prefService: PrefrenceService) {
+    private prefService: PrefrenceService,
+    private activatedRoute: ActivatedRoute,
+    private firebaseService: FirebaseService) {
     this.initializeApp();
   }
   initializeApp() {
@@ -38,6 +41,15 @@ export class RegistrationComponent implements OnInit {
       password: ['', Validators.required],
       password_confirm: ['', Validators.required]
     });
+
+    this.activatedRoute.queryParams.subscribe(data => {
+      if (data['email'] != undefined) {
+        this.user = data
+      }
+    }
+
+      // console.log(JSON.parse(data))
+    );
   }
   // async signInWithFacebook(){
   //   const result = await FirebaseAuthentication.signInWithFacebook();
@@ -56,7 +68,7 @@ export class RegistrationComponent implements OnInit {
       'user_photos',
       'user_gender',
     ];
-    const result = await((
+    const result = await ((
       FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS })
     ));
 
@@ -68,7 +80,7 @@ export class RegistrationComponent implements OnInit {
     // else if (result.accessToken && !result.accessToken.userId) {
     //   this.getCurentToken();
     // } 
-     if (result.accessToken) {
+    if (result.accessToken) {
       this.fbToken = result.accessToken;
       console.log(`Facebook access token is ${result.accessToken}`);
       this.getFbProfile();
@@ -80,14 +92,14 @@ export class RegistrationComponent implements OnInit {
   }
   async getCurentToken() {
     const result = await FacebookLogin.getCurrentAccessToken();
-    if(result.accessToken){
+    if (result.accessToken) {
       this.fbToken = result.accessToken;
       this.getFbProfile();
     } else {
       console.log('login faild, no access token')
     }
   }
-  async getFbProfile(){
+  async getFbProfile() {
     const result = await FacebookLogin.getProfile({ fields: ['email', 'name', 'id'] });
     this.user = result;
   }
@@ -109,7 +121,7 @@ export class RegistrationComponent implements OnInit {
     } else if (form.value.email == "") {
       this.objService.showErrorToast("Please enter email", '');
       return;
-    } else if (form.value.phone == "" ) {
+    } else if (form.value.phone == "") {
       this.objService.showErrorToast("Please enter valid phone", '');
       return;
     } else if (form.value.phone.length != 11) {
@@ -129,7 +141,12 @@ export class RegistrationComponent implements OnInit {
       name: form.value.name, email: form.value.email, mobile: form.value.phone,
       password: form.value.password,
       password_confirmation: form.value.password_confirm, firebase_id: form.value.password,
-      device_id: '1234', device_type: 'android', device_token: '1234'
+      // device_id: '1234', 
+      // device_type: 'android',
+      //  device_token: '1234'
+       device_id: this.firebaseService.deviceId,
+      device_type: this.firebaseService.platform, 
+      device_token: this.firebaseService.deviceToken
     }).subscribe((data: any) => {
       console.log(data);
       localStorage.setItem('authToken', data.token);
