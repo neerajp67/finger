@@ -20,7 +20,8 @@ const config: CapacitorConfig = {
       "localhost:4200",
       "*.paystack.com",
       "*.cloudwaysapps.com",
-      "https://socket.chalesocial.com "
+      "https://socket.chalesocial.com",
+      // "*.paystack.*"
     ],
   },
   plugins: {

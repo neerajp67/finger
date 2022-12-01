@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   life1: any = 0;
   life2: any = 1;
   lifeBuyCount: number = 1;
-  lifePrice: any = 10;
+  lifePrice: any;
   lifeFixedPrice: any;
   interval1: any;
 
@@ -318,6 +318,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.objService.getSetting().subscribe((data: any) => {
       console.log(data);
       this.lifeFixedPrice = data.life_price;
+      this.lifePrice = data.life_price;
       this.currency = data.currency;
       this.prefService.paystackData = data;
       this.appSetting = data;

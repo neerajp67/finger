@@ -28,10 +28,13 @@
             <!-- <div class="addAmountBtn" id="addAmountBtn" (click)="addAmount()">
                 <p>Add Amount</p>
             </div> -->
-            <button angular4-paystack class="addAmountBtn" [key]="paystackKey"
+            <!-- <button angular4-paystack class="addAmountBtn" [key]="paystackKey"
                 [email]="userEmail" [currency]="currency" [amount]="addAmountValue * 100" [ref]="paystackReference"
                 (paymentInit)="paymentInit()" (onClose)="paymentCancel()" (callback)="paymentDone($event)"
                 (click)="addAmount()">
+                Add Amount
+            </button> -->
+             <button (click)="paystackPay()" class="addAmountBtn">
                 Add Amount
             </button>
         </div>

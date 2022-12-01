@@ -5,6 +5,7 @@ import { PaystackOptions } from 'angular4-paystack';
 import { FingerService } from 'src/app/utils/finger.service';
 import { PrefrenceService } from 'src/app/utils/prefrence.service';
 import { environment } from 'src/environments/environment';
+import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser';
 
 @Component({
   selector: 'app-wallet',
@@ -25,6 +26,9 @@ export class WalletComponent implements OnInit {
   paystackReference: any;
   currency: any;
   addAmountBtn: boolean = false;
+
+  browser: any;
+  browserAutoClose:boolean =  false;
 
   constructor(private route: Router, private objService: FingerService,
     private prefService: PrefrenceService) { }
@@ -53,7 +57,7 @@ export class WalletComponent implements OnInit {
       }
     });
     this.getTransactions();
-
+    // this.paystackPay();
   }
   ngAfterViewInit(): void {
 
@@ -99,40 +103,40 @@ export class WalletComponent implements OnInit {
       (error: any) => {
         console.log(error);
       })
-    
+
     this.withdwarAmountValue = '';
   }
 
-  paymentInit() {
-    
-    console.log('Payment initialized');
-  }
+  // paymentInit() {
+  //   console.log('Payment initialized');
+  // }
 
-  paymentDone(ref: any) {
-    console.log('Payment successfull', ref);
-    this.objService.showSuccessToast('Payment successfull', '');
-    this.objService.walletCredit({ amount: this.addAmountValue }).subscribe(async (data: any) => {
-      console.log(data);
-      // var accessCode = data.data.access_code;
-      // this.authorizationUrl = data.data.authorization_url;
-      // var reference = data.data.reference;
-      this.addAmountValue = "";
-      this.getTransactions();
-      this.getProfile();
-    },
-      (error: any) => {
-        console.log(error);
-      })
-  }
+  // paymentDone(ref: any) {
+  //   console.log('Payment successfull', ref);
+  //   this.objService.showSuccessToast('Payment successfull', '');
+  //   this.objService.walletCredit({ amount: this.addAmountValue }).subscribe(async (data: any) => {
+  //     console.log(data);
+  //     // var accessCode = data.data.access_code;
+  //     // this.authorizationUrl = data.data.authorization_url;
+  //     // var reference = data.data.reference;
+  //     this.addAmountValue = "";
+  //     this.getTransactions();
+  //     this.getProfile();
+  //   },
+  //     (error: any) => {
+  //       console.log(error);
+  //     })
+  // }
 
-  paymentCancel() {
-    console.log('Payment Failed');
-    this.objService.showErrorToast('Payment Failed', '');
-  }
+  // paymentCancel() {
+  //   console.log('Payment Failed');
+  //   this.objService.showErrorToast('Payment Failed', '');
+  // }
+
   valuechange(event: any) {
     // console.log(event.target.value);
     this.addAmountValue = event.target.value
-    if(this.addAmountValue < 3){
+    if (this.addAmountValue < 3) {
       this.addAmountBtn = false;
     } else {
       this.addAmountBtn = true;
@@ -154,6 +158,108 @@ export class WalletComponent implements OnInit {
         console.log(error);
       })
   }
-
-
+  paystackPay() {
+    this.objService.getPaystack({ email: this.userEmail, amount: this.addAmountValue * 100 })
+      .subscribe((data: any) => {
+        console.log(data);
+        const options: InAppBrowserOptions = {
+          location: "yes",
+          //beforeload: "yes",
+          hideurlbar: "yes",
+          hidenavigationbuttons: "yes",
+        };
+        const browser = InAppBrowser.create(data.data.authorization_url, '_self', options);
+        //'loadstart' | 'loadstop' | 'loaderror' | 'exit' | 'beforeload' 
+        browser.on('beforeload').subscribe(event => {
+          let domain = (new URL(event.url));
+          let domain2 = (new URL(environment.baseUrl));
+          if (domain.hostname === domain2.hostname) {
+            console.log("176", domain, domain2);
+            return browser.close()
+          }
+          return true;
+        });
+        browser.on('exit').subscribe(event => {
+          console.log("2w");
+          if(this.browserAutoClose == false){
+            this.objService.showErrorToast('', "Payment Cancelled");
+          }
+          // console.log(JSON.stringify(event));
+          // let domain = (new URL(event.url));
+          // console.log(domain.hostname);
+        });
+        browser.on('loaderror').subscribe(event => {
+          console.log("3w");
+          console.log(event);
+        });
+        browser.on('loadstart').subscribe(event => {
+          console.log("190");
+          console.log(event);
+          let domain = (new URL(event.url));
+          let domain2 = (new URL(environment.baseUrl));
+          if (domain.hostname === domain2.hostname) {
+            console.log("192", domain.hostname, domain2.hostname);
+            setTimeout(() => {
+              browser.close()
+              // this.setUser()
+            }, 1000)
+          }
+          return true;
+        });
+        browser.on('loadstop').subscribe(event => {
+          console.log("205");
+          console.log(JSON.stringify(event));
+          let domain = (new URL(event.url));
+          let domain2 = (new URL(environment.baseUrl));
+          if (domain.hostname === domain2.hostname) {
+            console.log("204", domain.hostname, domain2.hostname);
+            // this.setUser()
+            this.browserAutoClose = true;
+            this.checkPaystack(event);
+            return browser.close()
+          }
+          return true;
+        });
+      },
+        (error: any) => {
+          console.log(error);
+        })
+  }
+  checkPaystack(event: any) {
+    this.browserAutoClose = false;
+    console.log("checkPaystack");
+    let url = event.url;
+    let urlArr = url.split("=")
+    let trxref = urlArr[1];
+    let ref = urlArr[2];
+    console.log(trxref, ref);
+    this.objService.checkPaystack({ reference: ref }).subscribe((data: any) => {
+      console.log(data);
+      if (data.status == true) {
+        if(data.data.status == 'success'){
+          this.objService.showSuccessToast('', data.message);
+          this.walletCredit(data.data.amount)
+        } else {
+          this.objService.showErrorToast('', data.status);
+        }
+      } else {
+        this.objService.showErrorToast('', data.status);
+      }
+    },
+      (error: any) => {
+        console.log(error);
+      })
+  }
+  walletCredit(data: any) {
+    let amount = parseInt(data)
+    this.objService.walletCredit({ amount: amount / 100 }).subscribe(async (data: any) => {
+      console.log(data);
+      this.addAmountValue = "";
+      this.getTransactions();
+      this.getProfile();
+    },
+      (error: any) => {
+        console.log(error);
+      })
+  }
 }

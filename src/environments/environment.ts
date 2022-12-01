@@ -8,7 +8,7 @@ export const environment = {
   baseUrl: 'https://finger.chalesocial.com' ,
   PUSHER_APP_KEY: 'app-key',
   wsHost: 'socket.chalesocial.com',
-  paystackKey: 'pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'
+  paystackKey: 'pk_live_06fe9ecec7de094c72e9ea9468cff638a26c838d'
 };
 
 // export const environment = {

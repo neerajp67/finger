@@ -117,13 +117,12 @@ export class AppComponent {
     this.objService.getSetting().subscribe((data: any) => {
       console.log(data);
       CapacitorApp.getInfo().then((value: any) => {
-        if (value.version != data.app_version) {
+        console.log('version: ' + value.version + ' ' + data.app_version);
+        if (data.app_version  > value.version ) {
           this.appUpdateLink = data.app_store_link;
           this.versionUpdateRequired = true;
-          console.log('version: ' + value.version + ' ' + data.app_version);
         }
       });
-
 
       // async function getDeviceInfo() {
       //   const info = await CapacitorApp.getInfo();

@@ -48,7 +48,7 @@ export function playerFactory() {
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    Angular4PaystackModule.forRoot('pk_test_34def31984d3b4c04ab3eda06561eed0b3ed1d0e'),
+    Angular4PaystackModule.forRoot('pk_live_06fe9ecec7de094c72e9ea9468cff638a26c838d'),
     ToastrModule.forRoot(), 
     BrowserAnimationsModule,
     LottieModule.forRoot({ player: playerFactory }),

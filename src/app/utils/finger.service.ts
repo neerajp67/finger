@@ -168,8 +168,11 @@ export class FingerService {
   walletWithdraw(obj: any) {
     return this.httpClient.post(this.baseUrl + '/api/wallet-request', obj);
   } 
-  paystack(obj: any) {
-    return this.httpClient.get(this.baseUrl + `/api/paystack/${obj.email}/${obj.amount}`);
+  getPaystack(obj: any) {
+    return this.httpClient.post(this.baseUrl + `/api/paystack`, obj);
+  }
+  checkPaystack(obj: any){
+    return this.httpClient.post(this.baseUrl + `/api/check-paystack`, obj);
   }
   getlifePackages(obj: any) {
     return this.httpClient.get(this.baseUrl + '/api/life-packages', obj);
@@ -189,5 +192,6 @@ export class FingerService {
   winEvent(obj: any) {
     return this.httpClient.post(this.baseUrl + '/api/game-events/win-event', obj);
   }
+
 }
 
